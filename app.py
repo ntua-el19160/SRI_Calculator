@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from models import Building, EnergyEfficiencyMeasure, get_session
+from models import Domain_W, Impact_W, Levels, Services, get_session
 
 app = FastAPI()
 

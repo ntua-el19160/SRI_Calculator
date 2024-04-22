@@ -10,8 +10,8 @@ csv_file_path4 = 'Classes_CSV/services.csv'
 
 data1 = pd.read_csv(csv_file_path1)
 data2 = pd.read_csv(csv_file_path2)
-data3 = pd.read_csv(csv_file_path3)
-data4 = pd.read_csv(csv_file_path4)
+#data3 = pd.read_csv(csv_file_path3)
+#data4 = pd.read_csv(csv_file_path4)
 
 
 # Define the SQLAlchemy database URL. For SQLite, we'll use a file-based database.
@@ -85,7 +85,7 @@ def create_db_and_tables():
 # Function to get a database session
 def get_session():
     with Session(engine) as session:
-        for _, row in data1.iterrows():
+        for row in data1.iterrows():
             domain_w = Domain_W(
                 building_type=row['building_type'],
                 zone=row['zone'],
@@ -111,29 +111,29 @@ def get_session():
                 imp_cr7=row['imp_cr7'],           
             )
             session.add(impact_w)
-        for _, row in data3.iterrows():
-            levels = Levels(
-                code=row['code'],
-                level_desc=row['level_desc'],
-                desc=row['desc'],
-                score_cr1=row['score_cr1'],
-                score_cr2=row['score_cr2'],
-                score_cr3=row['score_cr3'],
-                score_cr4=row['score_cr4'],
-                score_cr5=row['score_cr5'],
-                score_cr6=row['score_cr6'],
-                score_cr7=row['score_cr7'],
+        #for _, row in data3.iterrows():
+            #levels = Levels(
+                #code=row['code'],
+                #level_desc=row['level_desc'],
+                #desc=row['desc'],
+                #score_cr1=row['score_cr1'],
+                #score_cr2=row['score_cr2'],
+                #score_cr3=row['score_cr3'],
+                #score_cr4=row['score_cr4'],
+                #score_cr5=row['score_cr5'],
+                #score_cr6=row['score_cr6'],
+                #score_cr7=row['score_cr7'],
                            
-            )
-            session.add(levels)
-        for _, row in data4.iterrows():
-            services = Services(
-                domain=row['domain'],
-                code=row['code'],
-                Service_group=row['Service_group'],
-                Service_desc=row['Service_desc']                           
-            )
-            session.add(services)
+            #)
+            #session.add(levels)
+        #for _, row in data4.iterrows():
+            #services = Services(
+                #domain=row['domain'],
+                #code=row['code'],
+                #Service_group=row['Service_group'],
+                #Service_desc=row['Service_desc']                           
+            #)
+            #session.add(services)
         
         session.commit()
 
