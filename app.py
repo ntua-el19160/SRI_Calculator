@@ -22,7 +22,7 @@ class EnergyEfficiencyMeasureCreate(BaseModel):
 @app.post("/buildings/", response_model=Building)
 def create_building(building_data: BuildingCreate):
     with get_session() as session:
-        building = Building(**building_data.dict())
+        building = Building(building_data.model_dump())
         session.add(building)
         session.commit()
         session.refresh(building)
@@ -32,7 +32,7 @@ def create_building(building_data: BuildingCreate):
 @app.post("/energy-efficiency-measures/", response_model=EnergyEfficiencyMeasure)
 def create_energy_efficiency_measure(measure_data: EnergyEfficiencyMeasureCreate):
     with get_session() as session:
-        measure = EnergyEfficiencyMeasure(**measure_data.dict())
+        measure = EnergyEfficiencyMeasure(measure_data.model_dump())
         session.add(measure)
         session.commit()
         session.refresh(measure)
@@ -45,7 +45,7 @@ def add_energy_efficiency_measure_to_building(building_id: int, measure_data: En
         building = session.get(Building, building_id)
         if not building:
             raise HTTPException(status_code=404, detail="Building not found")
-        measure = EnergyEfficiencyMeasure(**measure_data.dict(), building_id=building_id)
+        measure = EnergyEfficiencyMeasure(measure_data.model_dump(), building_id=building_id)
         session.add(measure)
         session.commit()
         session.refresh(measure)
