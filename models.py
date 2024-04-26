@@ -10,7 +10,7 @@ csv_file_path4 = 'Classes_CSV/services.csv'
 
 data1 = pd.read_csv(csv_file_path1)
 data2 = pd.read_csv(csv_file_path2)
-#data3 = pd.read_csv(csv_file_path3)
+data3 = pd.read_csv(csv_file_path3)
 #data4 = pd.read_csv(csv_file_path4)
 
 
