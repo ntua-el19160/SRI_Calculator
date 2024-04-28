@@ -1,6 +1,7 @@
 from typing import List, Optional
 from sqlmodel import SQLModel, create_engine, Session
 import pandas as pd
+from sqlmodel import Field
 
 
 csv_file_path1 = 'Classes_CSV/domain_w.csv'
@@ -8,14 +9,14 @@ csv_file_path2 = 'Classes_CSV/impact_w.csv'
 csv_file_path3 = 'Classes_CSV/levels_new.csv'
 csv_file_path4 = 'Classes_CSV/services.csv'
 
-data1 = pd.read_csv(csv_file_path1)
-data2 = pd.read_csv(csv_file_path2)
-data3 = pd.read_csv(csv_file_path3)
-#data4 = pd.read_csv(csv_file_path4)
+data1 = pd.read_csv(csv_file_path1, delimiter=',')
+data2 = pd.read_csv(csv_file_path2, delimiter=',')
+data3 = pd.read_csv(csv_file_path3, delimiter=';')
+data4 = pd.read_csv(csv_file_path4, delimiter=',')
 
 
 # Define the SQLAlchemy database URL. For SQLite, we'll use a file-based database.
-DATABASE_URL = "postgresql://el19160:pr5td!z386@host:5432/SRI_DB"
+DATABASE_URL = "postgresql://el19160:pr5td!z386@localhost:5432/sri_db"
 
 # Create a SQLAlchemy database engine.
 engine = create_engine(DATABASE_URL, echo=True)
@@ -23,7 +24,7 @@ engine = create_engine(DATABASE_URL, echo=True)
 
 #Define the Domain Weights
 class Domain_W(SQLModel, table=True):
-    id: Optional[int] = None
+    id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
     building_type: str
     zone: str
     dw_cr1: float
@@ -41,7 +42,7 @@ class Domain_W(SQLModel, table=True):
 
 #Define the impact weights
 class Impact_W(SQLModel, table=True):
-    id: Optional[int] = None
+    id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
     building_type: str
     zone: str
     imp_cr1: float
@@ -54,7 +55,7 @@ class Impact_W(SQLModel, table=True):
 
 #Define the levels
 class Levels(SQLModel, table=True):
-    id: Optional[int] = None
+    id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
     code:str
     level_desc:int
     desc:str
@@ -70,16 +71,19 @@ class Levels(SQLModel, table=True):
     domain:str
 
 class Services(SQLModel, table=True):
-    id: Optional[int] = None
+    id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
     domain:str
     code:str
     Service_group:str
     Service_desc:str
 
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
+    password:str
+    Name:str
+    building:str
+    
 
-# Create the database tables
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
 
 
 # Function to get a database session
@@ -111,29 +115,36 @@ def get_session():
                 imp_cr7=row['imp_cr7'],           
             )
             session.add(impact_w)
-        #for _, row in data3.iterrows():
-            #levels = Levels(
-                #code=row['code'],
-                #level_desc=row['level_desc'],
-                #desc=row['desc'],
-                #score_cr1=row['score_cr1'],
-                #score_cr2=row['score_cr2'],
-                #score_cr3=row['score_cr3'],
-                #score_cr4=row['score_cr4'],
-                #score_cr5=row['score_cr5'],
-                #score_cr6=row['score_cr6'],
-                #score_cr7=row['score_cr7'],
+        for _, row in data3.iterrows():
+            levels = Levels(
+                code=row['code'],
+                level_desc=row['level_desc'],
+                desc=row['desc'],
+                score_cr1=row['score_cr1'],
+                score_cr2=row['score_cr2'],
+                score_cr3=row['score_cr3'],
+                score_cr4=row['score_cr4'],
+                score_cr5=row['score_cr5'],
+                score_cr6=row['score_cr6'],
+                score_cr7=row['score_cr7'],
                            
-            #)
-            #session.add(levels)
-        #for _, row in data4.iterrows():
-            #services = Services(
-                #domain=row['domain'],
-                #code=row['code'],
-                #Service_group=row['Service_group'],
-                #Service_desc=row['Service_desc']                           
-            #)
-            #session.add(services)
+            )
+            session.add(levels)
+        for _, row in data4.iterrows():
+            services = Services(
+                domain=row['domain'],
+                code=row['code'],
+                Service_group=row['Service_group'],
+                Service_desc=row['Service_desc']                           
+            )
+            session.add(services)
         
         session.commit()
+
+# Create the database tables
+def create_db_and_tables():
+    SQLModel.metadata.drop_all(engine)
+    SQLModel.metadata.create_all(engine)
+
+create_db_and_tables()
 
