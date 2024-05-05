@@ -10,10 +10,26 @@ csv_file_path3 = 'Classes_CSV/levels_new.csv'
 csv_file_path4 = 'Classes_CSV/services.csv'
 
 data1 = pd.read_csv(csv_file_path1, delimiter=',')
+if data1 is None or data1.empty:
+    raise ValueError("Data not loaded correctly")
 data2 = pd.read_csv(csv_file_path2, delimiter=',')
+if data2 is None or data2.empty:
+    raise ValueError("Data not loaded correctly")
 data3 = pd.read_csv(csv_file_path3, delimiter=';')
+if data3 is None or data3.empty:
+    raise ValueError("Data not loaded correctly")
 data4 = pd.read_csv(csv_file_path4, delimiter=',')
+if data4 is None or data4.empty:
+    raise ValueError("Data not loaded correctly")
 
+# Replace NaN values with a default or valid value
+data3['mandatory'] = data3['mandatory'].fillna(False).astype(bool)
+data3['description'] = data3['description'].fillna("Unknown").astype(str)
+
+# Validate all expected numerical fields
+numerical_fields = ['score_cr1', 'score_cr2', 'score_cr3', 'score_cr4', 'score_cr5', 'score_cr6', 'score_cr7']
+for field in numerical_fields:
+    data3[field] = pd.to_numeric(data3[field], errors='coerce').fillna(0)
 
 # Define the SQLAlchemy database URL. For SQLite, we'll use a file-based database.
 DATABASE_URL = "postgresql://el19160:pr5td!z386@localhost:5432/sri_db"
@@ -35,10 +51,6 @@ class Domain_W(SQLModel, table=True):
     dw_cr6: float
     dw_cr7: float
 
-    def calculate_sri_score(self):
-        #SRI score calculation 
-        return 0  #Placeholder value
-
 
 #Define the impact weights
 class Impact_W(SQLModel, table=True):
@@ -56,9 +68,9 @@ class Impact_W(SQLModel, table=True):
 #Define the levels
 class Levels(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
-    code:str
-    level_desc:int
-    desc:str
+    code: str
+    level_desc: str
+    description: str
     score_cr1: int
     score_cr2: int
     score_cr3: int
@@ -74,13 +86,13 @@ class Services(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
     domain:str
     code:str
-    Service_group:str
-    Service_desc:str
+    service_group:str
+    service_desc:str
 
-class User(SQLModel, table=True):
+class atom(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
     password:str
-    Name:str
+    name:str
     building:str
     
 
@@ -89,7 +101,7 @@ class User(SQLModel, table=True):
 # Function to get a database session
 def get_session():
     with Session(engine) as session:
-        for row in data1.iterrows():
+        for _, row in data1.iterrows():
             domain_w = Domain_W(
                 building_type=row['building_type'],
                 zone=row['zone'],
@@ -116,10 +128,15 @@ def get_session():
             )
             session.add(impact_w)
         for _, row in data3.iterrows():
+            # Check for NaN values in critical fields
+            if pd.isna(row['description']):
+                raise ValueError("Invalid description found")
+            if not isinstance(row['mandatory'], bool):
+                raise ValueError("Mandatory field should be a boolean")
             levels = Levels(
                 code=row['code'],
                 level_desc=row['level_desc'],
-                desc=row['desc'],
+                description=row['description'],
                 score_cr1=row['score_cr1'],
                 score_cr2=row['score_cr2'],
                 score_cr3=row['score_cr3'],
@@ -127,19 +144,24 @@ def get_session():
                 score_cr5=row['score_cr5'],
                 score_cr6=row['score_cr6'],
                 score_cr7=row['score_cr7'],
-                           
+                level=row['level'],
+                mandatory=row['mandatory'],
+                domain=row['domain'] 
             )
             session.add(levels)
         for _, row in data4.iterrows():
             services = Services(
-                domain=row['domain'],
-                code=row['code'],
-                Service_group=row['Service_group'],
-                Service_desc=row['Service_desc']                           
+                domain=row['Domain'],
+                code=row['Code'],
+                service_group=row['service_group'],
+                service_desc=row['service_desc']                           
             )
             session.add(services)
         
         session.commit()
+    if session is None:
+        raise RuntimeError("Failed to create a database session")
+    return Session(engine)
 
 # Create the database tables
 def create_db_and_tables():

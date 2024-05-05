@@ -1,4 +1,4 @@
-Domain,Code,Service_group,Service_desc
+Domain,Code,service_group,service_desc
 Cooling,C-1a,"Cooling control - demand side","Cooling emission control"
 Cooling,C-1b,"Cooling control - demand side","Emission control for TABS (cooling mode)"
 Cooling,C-1c,"Cooling control - demand side","Control of distribution network chilled water temperature (supply or return)"

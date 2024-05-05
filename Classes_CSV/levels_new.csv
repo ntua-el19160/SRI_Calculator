@@ -1,4 +1,4 @@
-code;level_desc;desc;score_cr1;score_cr2;score_cr3;score_cr4;score_cr5;score_cr6;score_cr7;level;mandatory;domain
+code;level_desc;description;score_cr1;score_cr2;score_cr3;score_cr4;score_cr5;score_cr6;score_cr7;level;mandatory;domain
 H-1a;level 0;No automatic control;0;0;0;0;0;0;0;0;0;Heating
 H-1a;level 1;Central automatic control (e.g. central thermostat);1;0;1;1;1;0;0;1;0;Heating
 H-1a;level 2;Individual room control (e.g. thermostatic valves, or electronic controller);2;0;2;2;2;0;0;2;0;Heating
