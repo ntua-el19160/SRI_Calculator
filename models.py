@@ -43,6 +43,7 @@ class Domain_W(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)  # Primary key
     building_type: str
     zone: str
+    domain: str
     dw_cr1: float
     dw_cr2: float
     dw_cr3: float
@@ -105,6 +106,7 @@ def get_session():
             domain_w = Domain_W(
                 building_type=row['building_type'],
                 zone=row['zone'],
+                domain=row['domain'],
                 dw_cr1=row['dw_cr1'],
                 dw_cr2=row['dw_cr2'],
                 dw_cr3=row['dw_cr3'],
