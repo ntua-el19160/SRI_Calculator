@@ -19,12 +19,13 @@ class SRIInput(BaseModel):
 
 # Define a Pydantic model for the SRI output
 class SRIOutput(BaseModel):
-    domain_impact_scores: Dict[str, int]  # Domain-impact criteria scores
-    domain_max_scores: Dict[str, int]
+    #domain_impact_scores: Dict[str, int]  # Domain-impact criteria scores
+    #domain_max_scores: Dict[str, int]
     smart_readiness_scores: Dict[str, float]  # The new percentage score, allowing float
-    weighted_impact_sums: Dict[str, float]  # Weighted sums for each impact criterion
-    weighted_max_sums: Dict[str, float]  # Weighted sums for each impact criterion using lmax(d, ic)
+    #weighted_impact_sums: Dict[str, float]  # Weighted sums for each impact criterion
+    #weighted_max_sums: Dict[str, float]  # Weighted sums for each impact criterion using lmax(d, ic)
     sr_impact_criteria: Dict[str, float]  # New percentage score for each impact criterion
+    sr_domains: Dict[str, float]  # Smart Readiness score for each domain
     srf_scores: Dict[str, float] # Percentage for the SRf score for 3 key functionalities
     total_sri: float  # New field for the total SRI score
 
@@ -191,6 +192,42 @@ key_functionalities = {
     "Energy Flexibility": ["Energy, flexibility and storage"]
 }
 
+# Function to calculate weighted domain sums
+def calculate_weighted_domain_sums(domain_impact_scores):
+    weighted_domain_sums = {}  # Initialize the weighted sums for each domain
+    
+    # Loop through the domain-impact scores
+    for key, score in domain_impact_scores.items():
+        domain, impact_criterion = key.split("-")
+        
+        if domain not in weighted_domain_sums:
+            weighted_domain_sums[domain] = 0
+        
+        # Add weighted score to the domain's total
+        weighted_domain_sums[domain] += impact_weights[impact_criterion] * score
+
+    return weighted_domain_sums
+
+
+# Function to calculate SR for each domain
+def calculate_sr_domains(weighted_domain_sums, weighted_max_domain_sums):
+    sr_domains = {}  # Initialize SR for each domain
+    
+    for domain in weighted_domain_sums:
+        domain_sum = weighted_domain_sums[domain]
+        max_domain_sum = weighted_max_domain_sums.get(domain, 0)
+        
+        if max_domain_sum != 0:
+            sr_domain = (domain_sum / max_domain_sum) * 100  # Calculate SR(d)
+        else:
+            sr_domain = 0
+        
+        sr_domains[domain] = round(sr_domain, 2)  # Round to two decimal places
+
+    return sr_domains
+
+
+
 # Function to calculate SRf scores for each key functionality
 def calculate_srf_scores(sr_impact_criteria):
     srf_scores = {}  # Initialize the SRf scores dictionary
@@ -267,6 +304,14 @@ def calculate_sri(input_data: SRIInput):
         # Calculate the total SRI score
         total_sri = calculate_total_sri(srf_scores)
 
+        # Calculate the weighted sums for each domain
+        weighted_domain_sums = calculate_weighted_domain_sums(domain_impact_scores)
+        weighted_max_domain_sums = calculate_weighted_domain_sums(domain_max_scores)
+        
+        # Calculate SR(d) for each domain
+        sr_domains = calculate_sr_domains(weighted_domain_sums, weighted_max_domain_sums)
+
+
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
     except Exception as e:
@@ -274,12 +319,13 @@ def calculate_sri(input_data: SRIInput):
 
     # Return all expected results
     return {
-        "domain_impact_scores": domain_impact_scores,
-        "domain_max_scores": domain_max_scores,
+        #"domain_impact_scores": domain_impact_scores,
+        #"domain_max_scores": domain_max_scores,
         "smart_readiness_scores": smart_readiness_scores,
-        "weighted_impact_sums": weighted_sums,
-        "weighted_max_sums": weighted_max_sums,
-        "sr_impact_criteria": sr_impact_criteria,  # Include SR(ic) percentages
+        #"weighted_impact_sums": weighted_sums,
+        #"weighted_max_sums": weighted_max_sums,
+        "sr_impact_criteria": sr_impact_criteria,  
+        "sr_domains": sr_domains,
         "srf_scores": srf_scores,
         "total_sri": total_sri
     }
