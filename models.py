@@ -95,6 +95,16 @@ class atom(SQLModel, table=True):
     password:str
     name:str
     building:str
+
+# Define the Building model
+class Building(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    building_type: str
+    zone: str
+    country: str
+    city: str
+    year_built: int
+
     
 
 

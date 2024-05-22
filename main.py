@@ -1,14 +1,37 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict
 from sqlmodel import Session
 from sqlalchemy.exc import SQLAlchemyError
-from models import get_session, Levels, Domain_W, Impact_W, Services
+from models import get_session, Levels, Domain_W, Impact_W, Services, Building
 
 
 # Initialize the FastAPI application
 app = FastAPI()
 
+# Configure CORS
+origins = [
+    "http://localhost:3000",  # React frontend
+    "http://127.0.0.1:3000",  # Another possible localhost address
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allows access from these origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
+
+
+# Define a Pydantic model for the Building input
+class BuildingInput(BaseModel):
+    building_type: str
+    zone: str
+    country: str
+    city: str
+    year_built: int
 
 # Define a Pydantic model for the SRI calculation input
 class SRIInput(BaseModel):
@@ -19,11 +42,11 @@ class SRIInput(BaseModel):
 
 # Define a Pydantic model for the SRI output
 class SRIOutput(BaseModel):
-    #domain_impact_scores: Dict[str, int]  # Domain-impact criteria scores
-    #domain_max_scores: Dict[str, int]
+    domain_impact_scores: Dict[str, int]  # Domain-impact criteria scores (not necessary)
+    domain_max_scores: Dict[str, int] #not necessary
     smart_readiness_scores: Dict[str, float]  # The new percentage score, allowing float
-    #weighted_impact_sums: Dict[str, float]  # Weighted sums for each impact criterion
-    #weighted_max_sums: Dict[str, float]  # Weighted sums for each impact criterion using lmax(d, ic)
+    weighted_impact_sums: Dict[str, float]  # Weighted sums for each impact criterion (not necessary)
+    weighted_max_sums: Dict[str, float]  # Weighted sums for each impact criterion using lmax(d, ic) (not necessary)
     sr_impact_criteria: Dict[str, float]  # New percentage score for each impact criterion
     sr_domains: Dict[str, float]  # Smart Readiness score for each domain
     srf_scores: Dict[str, float] # Percentage for the SRf score for 3 key functionalities
@@ -177,12 +200,12 @@ def calculate_weighted_sums(user_input: SRIInput, impact_scores: Dict[str, int])
 # Adding fixed weights for the impact criteria
 impact_weights = {
     "Energy efficiency": 0.166666667,
-    "Maintenance and fault prediction": 0.333333333,
+    "Maintenance and fault prediction": 0.166666667,
     "Comfort": 0.083333333,
     "Convenience": 0.083333333,
     "Health, wellbeing and accessibility": 0.083333333,
     "Information to occupants": 0.083333333,
-    "Energy, flexibility and storage": 0.166666667
+    "Energy, flexibility and storage": 0.333333333
 }
 
 # Define the key functionalities and their associated impact criteria
@@ -319,13 +342,35 @@ def calculate_sri(input_data: SRIInput):
 
     # Return all expected results
     return {
-        #"domain_impact_scores": domain_impact_scores,
-        #"domain_max_scores": domain_max_scores,
+        "domain_impact_scores": domain_impact_scores,
+        "domain_max_scores": domain_max_scores,
         "smart_readiness_scores": smart_readiness_scores,
-        #"weighted_impact_sums": weighted_sums,
-        #"weighted_max_sums": weighted_max_sums,
+        "weighted_impact_sums": weighted_sums,
+        "weighted_max_sums": weighted_max_sums,
         "sr_impact_criteria": sr_impact_criteria,  
         "sr_domains": sr_domains,
         "srf_scores": srf_scores,
         "total_sri": total_sri
     }
+
+# Endpoint to add a new building
+@app.post("/add_building/")
+def add_building(input_data: BuildingInput):
+    try:
+        with get_session() as session:
+            building = Building(
+                building_type=input_data.building_type,
+                zone=input_data.zone,
+                country=input_data.country,
+                city=input_data.city,
+                year_built=input_data.year_built
+            )
+            session.add(building)
+            session.commit()
+            return {"message": "Building added successfully"}
+    except SQLAlchemyError as e:
+            session.rollback()
+            raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    except Exception as e:
+            session.rollback()
+            raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
