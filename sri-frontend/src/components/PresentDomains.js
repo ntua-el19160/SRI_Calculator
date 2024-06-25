@@ -20,9 +20,8 @@ const PresentDomains = () => {
   };
 
   const handleSubmit = () => {
-    // Redirect to the next page (to be created later)
-    navigate("/next_page"); // Update with actual next page path
-  };
+    navigate('/services_applications');
+};
 
   return (
     <Container textAlign="center">
@@ -55,7 +54,7 @@ const PresentDomains = () => {
         ))}
         <Grid.Row>
           <Grid.Column>
-            <Button onClick={handleSubmit} primary>Confirm</Button>
+            <Button onClick={handleSubmit} primary>Show Services</Button>
           </Grid.Column>
         </Grid.Row>
       </Grid>
