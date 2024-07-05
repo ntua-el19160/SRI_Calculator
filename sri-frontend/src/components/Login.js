@@ -15,11 +15,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/token', new URLSearchParams({
+      const response = await axios.post('http://localhost:8000/token', new URLSearchParams({
         'username': formData.username,
         'password': formData.password
       }));
-      navigate('/add_building');
+      // After successful login
+      localStorage.setItem('token', response.data.access_token);
+      navigate('/profile');
     } catch (error) {
       console.error('Error logging in', error);
       alert("Invalid Credentials");
@@ -45,4 +47,3 @@ const Login = () => {
 };
 
 export default Login;
-

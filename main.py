@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, constr
 from typing import Dict
 from sqlmodel import Session
 from sqlalchemy.exc import SQLAlchemyError
@@ -38,9 +38,13 @@ app.add_middleware(
 )
 
 class UserCreate(BaseModel):
+    #id: int
     username: str
-    email: str
+    email: EmailStr
     password: str
+
+    class Config:
+        orm_mode = True
 
 class Token(BaseModel):
     access_token: str
@@ -382,6 +386,12 @@ def calculate_sri(input_data: SRIInput):
         "total_sri": total_sri
     }
 
+
+
+
+
+
+
 # Endpoint to add a new building
 @app.post("/add_building/")
 def add_building(input_data: BuildingInput):
@@ -433,15 +443,21 @@ def authenticate_user(username: str, password: str, session: Session):
 @app.post("/signup/")
 async def sign_up(user: UserCreate):
     with get_session() as session:
-        hashed_password = get_password_hash(user.password)
-        db_user = person(username=user.username, email=user.email, hashed_password=hashed_password)
-        session.add(db_user)
         try:
+            print(f"Received signup request: {user}")
+            hashed_password = get_password_hash(user.password)
+            db_user = person(username=user.username, email=user.email, hashed_password=hashed_password)
+            session.add(db_user)
             session.commit()
-        except SQLAlchemyError:
+            return {"message": "User created successfully"}
+        except SQLAlchemyError as e:
             session.rollback()
+            print(f"Database error: {e}")
             raise HTTPException(status_code=400, detail="Username or email already exists")
-        return {"message": "User created successfully"}
+        except Exception as e:
+            session.rollback()
+            print(f"Unexpected error: {e}")
+            raise HTTPException(status_code=500, detail="An unexpected error occurred")
 
 # Token endpoint
 @app.post("/token", response_model=Token)
@@ -492,6 +508,10 @@ async def read_user(username: str):
         if user is None:
             raise HTTPException(status_code=404, detail="User not found")
         return user
+
+@app.get("/profile/", response_model=person)
+def read_profile(current_user: person = Depends(get_current_user)):
+    return current_user
 
 @app.on_event("startup")
 async def startup_event():

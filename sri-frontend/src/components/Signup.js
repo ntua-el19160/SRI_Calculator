@@ -1,31 +1,56 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Form, Container, Header } from 'semantic-ui-react';
+import { Button, Form, Container, Header, Message } from 'semantic-ui-react';
 
 const Signup = () => {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //const error = validateForm();
+    if (error) {
+      setError(error);
+      return;
+    }
+    setError(null);
+    console.log('Sending data:', formData); // Log form data
     try {
-      await axios.post('http://localhost:8000/signup/', formData);
-      navigate('/add_building');
+      const response = await axios.post('http://localhost:8000/signup/', formData);
+      console.log('Response:', response.data); // Log server response
+      localStorage.setItem('token', response.data.access_token);
+      navigate('/login');
     } catch (error) {
-      console.error('Error signing up', error);
-      alert("Error signing up");
+      if (error.response) {
+        console.error('Server responded with:', error.response.data); // Log server error response
+        alert(`Error: ${error.response.data.detail}`);
+      } else {
+        console.error('Error signing up', error); // Log other errors
+        alert("Error signing up");
+      }
     }
   };
 
   return (
     <Container>
       <Header as="h2" textAlign="center">Sign Up</Header>
+      {error && <Message error>{error}</Message>}
       <Form onSubmit={handleSubmit}>
         <Form.Field>
           <label>Username</label>
@@ -46,4 +71,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
