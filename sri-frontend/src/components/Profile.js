@@ -44,7 +44,7 @@ const Profile = () => {
             </div>
             <div style={{ textAlign: 'center' }}>
                 <button onClick={() => navigate('/my-buildings')}>My Buildings</button>
-                <button onClick={() => navigate('/new-building')}>New Building</button>
+                <button onClick={() => navigate('/add_building')}>New Building</button>
             </div>
         </div>
     );

@@ -38,7 +38,6 @@ app.add_middleware(
 )
 
 class UserCreate(BaseModel):
-    #id: int
     username: str
     email: EmailStr
     password: str
@@ -413,6 +412,8 @@ def add_building(input_data: BuildingInput):
     except Exception as e:
             session.rollback()
             raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
+
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
