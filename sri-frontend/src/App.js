@@ -7,6 +7,7 @@ import BuildingForm from './components/BuildingForm';
 import PresentDomains from './components/PresentDomains';
 import ServicesApplications from './components/ServicesApplications';
 import Profile from './components/Profile';
+import MyBuildings from './components/MyBuildings';
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/my_buildings" element={<MyBuildings />} />
                 <Route path="/add_building" element={<BuildingForm />} />
                 <Route path="/present_domains" element={<PresentDomains />} />
                 <Route path="/services_applications" element={<ServicesApplications />} />

@@ -21,7 +21,12 @@ const BuildingForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/add_building/", formData);
+      const token = localStorage.getItem('token');
+      await axios.post("http://localhost:8000/add_building/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       navigate("/present_domains");
     } catch (error) {
       console.error("Error submitting form", error);
@@ -65,9 +70,11 @@ const BuildingForm = () => {
         </Form.Field>
         <Button type="submit" primary>Submit</Button>
       </Form>
+      <div style={{ position: "fixed", bottom: 20, right: 20 }}>
+        <button onClick={() => navigate("/profile")}>Profile</button>
+      </div>
     </Container>
   );
 };
 
 export default BuildingForm;
-

@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlmodel import SQLModel, create_engine, Session
 import pandas as pd
-from sqlmodel import Field
+from sqlmodel import Field, Relationship
 from passlib.context import CryptContext
 from contextlib import contextmanager
 
@@ -30,6 +30,7 @@ class person(SQLModel, table=True):
     email: str = Field(unique=True)
     hashed_password: str
     is_active: bool = Field(default=True)
+    buildings: List["Building"] = Relationship(back_populates="owner")
 
 
 #Define the Domain Weights
@@ -92,6 +93,8 @@ class Building(SQLModel, table=True):
     country: str
     city: str
     year_built: int
+    owner_id: Optional[int] = Field(default=None, foreign_key="person.id")
+    owner: Optional[person] = Relationship(back_populates="buildings")
 
     
 

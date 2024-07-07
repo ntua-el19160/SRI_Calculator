@@ -2,12 +2,13 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, constr
-from typing import Dict
-from sqlmodel import Session
+from typing import Dict, List
+from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
 from models import get_session, Levels, Domain_W, Impact_W, Services, Building, person, pwd_context, create_db_and_tables, load_data_from_csv
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+import logging
 
 
 
@@ -62,6 +63,7 @@ class BuildingInput(BaseModel):
     country: str
     city: str
     year_built: int
+    #owner_id: int
 
 # Define a Pydantic model for the SRI calculation input
 class SRIInput(BaseModel):
@@ -385,7 +387,26 @@ def calculate_sri(input_data: SRIInput):
         "total_sri": total_sri
     }
 
-
+# Dependency to get the current user
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise credentials_exception
+    with get_session() as session:
+        user = session.query(person).filter(person.username == token_data.username).first()
+        if user is None:
+            raise credentials_exception
+    return user
 
 
 
@@ -393,7 +414,7 @@ def calculate_sri(input_data: SRIInput):
 
 # Endpoint to add a new building
 @app.post("/add_building/")
-def add_building(input_data: BuildingInput):
+def add_building(input_data: BuildingInput, current_user: person = Depends(get_current_user)):
     try:
         with get_session() as session:
             building = Building(
@@ -401,16 +422,19 @@ def add_building(input_data: BuildingInput):
                 zone=input_data.zone,
                 country=input_data.country,
                 city=input_data.city,
-                year_built=input_data.year_built
+                year_built=input_data.year_built,
+                owner_id=current_user.id
             )
             session.add(building)
             session.commit()
             return {"message": "Building added successfully"}
     except SQLAlchemyError as e:
             session.rollback()
+            logging.error(f"Database error: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
     except Exception as e:
             session.rollback()
+            logging.error(f"An unexpected error occurred: {str(e)}")
             raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
 
 
@@ -477,25 +501,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
         return {"access_token": access_token, "token_type": "bearer"}
 
-# Dependency to get the current user
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    with get_session() as session:
-        user = session.query(person).filter(person.username == username).first()
-        if user is None:
-            raise credentials_exception
-    return user
 
 # Example protected route
 @app.get("/users/me/")
@@ -513,6 +518,28 @@ async def read_user(username: str):
 @app.get("/profile/", response_model=person)
 def read_profile(current_user: person = Depends(get_current_user)):
     return current_user
+
+# Endpoint to retrieve buildings for the logged-in user
+@app.get("/my_buildings/")
+def get_user_buildings(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+    
+    with get_session() as session:
+        user = session.query(person).filter(person.username == username).first()
+        if user is None:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        buildings = session.query(Building).filter(Building.owner_id == user.id).all()
+        return buildings
+
+
+
 
 @app.on_event("startup")
 async def startup_event():

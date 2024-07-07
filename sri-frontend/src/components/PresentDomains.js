@@ -58,6 +58,9 @@ const PresentDomains = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      <div style={{ position: "fixed", bottom: 20, right: 20 }}>
+        <button onClick={() => navigate("/profile")}>Profile</button>
+      </div>
     </Container>
   );
 };
