@@ -8,6 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from models import get_session, Levels, Domain_W, Impact_W, Services, Building, person, pwd_context, create_db_and_tables, load_data_from_csv
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+from fastapi.responses import JSONResponse
 import logging
 
 
@@ -538,6 +539,19 @@ def get_user_buildings(token: str = Depends(oauth2_scheme)):
         buildings = session.query(Building).filter(Building.owner_id == user.id).all()
         return buildings
 
+@app.get("/services/{domain_name}")
+def get_services(domain_name: str):
+    with get_session() as session:
+        statement = select(Services).distinct(Services.code, Services.service_desc).where(Services.domain == domain_name)
+        results = session.exec(statement).all()
+        return JSONResponse(content=[result.dict() for result in results])
+
+@app.get("/levels/{service_code}")
+def get_levels(service_code: str):
+    with get_session() as session:
+        statement = select(Levels).distinct(Levels.level_desc, Levels.description, Levels.code).where(Levels.code == service_code)
+        results = session.exec(statement).all()
+        return JSONResponse(content=[result.dict() for result in results])
 
 
 

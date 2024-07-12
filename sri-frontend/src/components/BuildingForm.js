@@ -27,7 +27,7 @@ const BuildingForm = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      navigate("/present_domains");
+      navigate("/services_applications");
     } catch (error) {
       console.error("Error submitting form", error);
     }
