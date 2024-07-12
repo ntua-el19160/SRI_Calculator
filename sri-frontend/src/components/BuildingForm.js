@@ -5,6 +5,7 @@ import { Button, Form, Container, Header } from "semantic-ui-react";
 
 const BuildingForm = () => {
   const [formData, setFormData] = useState({
+    building_name: "",
     building_type: "",
     zone: "",
     country: "",
@@ -37,6 +38,15 @@ const BuildingForm = () => {
     <Container>
       <Header as="h2" textAlign="center">Building Information</Header>
       <Form onSubmit={handleSubmit}>
+      <Form.Field>
+          <label>Building Name</label>
+          <input
+            type="text"
+            name="building_name"
+            value={formData.building_name}
+            onChange={handleChange}
+          />
+        </Form.Field>
         <Form.Field>
           <label>Building Type</label>
           <select name="building_type" value={formData.building_type} onChange={handleChange}>

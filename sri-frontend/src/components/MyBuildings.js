@@ -54,6 +54,7 @@ const MyBuildings = () => {
       <Table celled>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell>Building Name</Table.HeaderCell>
             <Table.HeaderCell>Building Type</Table.HeaderCell>
             <Table.HeaderCell>Zone</Table.HeaderCell>
             <Table.HeaderCell>Country</Table.HeaderCell>
@@ -64,6 +65,7 @@ const MyBuildings = () => {
         <Table.Body>
           {buildings.map((building) => (
             <Table.Row key={building.id}>
+              <Table.Cell>{building.building_name}</Table.Cell>
               <Table.Cell>{building.building_type}</Table.Cell>
               <Table.Cell>{building.zone}</Table.Cell>
               <Table.Cell>{building.country}</Table.Cell>

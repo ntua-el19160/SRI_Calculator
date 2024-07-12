@@ -59,12 +59,15 @@ create_db_and_tables()
 
 # Define a Pydantic model for the Building input
 class BuildingInput(BaseModel):
+    building_name: str
     building_type: str
     zone: str
     country: str
     city: str
     year_built: int
-    #owner_id: int
+    
+    class Config:
+        orm_mode = True
 
 # Define a Pydantic model for the SRI calculation input
 class SRIInput(BaseModel):
@@ -419,6 +422,7 @@ def add_building(input_data: BuildingInput, current_user: person = Depends(get_c
     try:
         with get_session() as session:
             building = Building(
+                building_name = input_data.building_name,
                 building_type=input_data.building_type,
                 zone=input_data.zone,
                 country=input_data.country,
@@ -428,7 +432,7 @@ def add_building(input_data: BuildingInput, current_user: person = Depends(get_c
             )
             session.add(building)
             session.commit()
-            return {"message": "Building added successfully"}
+            return {"message": "Building added successfully", "building": building}
     except SQLAlchemyError as e:
             session.rollback()
             logging.error(f"Database error: {str(e)}")

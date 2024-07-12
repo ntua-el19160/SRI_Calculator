@@ -88,6 +88,7 @@ class Services(SQLModel, table=True):
 # Define the Building model
 class Building(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    building_name: str
     building_type: str
     zone: str
     country: str
