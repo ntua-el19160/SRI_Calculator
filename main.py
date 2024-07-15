@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, constr
@@ -65,9 +65,22 @@ class BuildingInput(BaseModel):
     country: str
     city: str
     year_built: int
-    
+
     class Config:
         orm_mode = True
+
+class BuildingOutput(BaseModel):
+    building_name: str
+    building_type: str
+    zone: str
+    country: str
+    city: str
+    year_built: int
+    owner_id: int
+
+    class Config:
+        orm_mode = True
+
 
 # Define a Pydantic model for the SRI calculation input
 class SRIInput(BaseModel):
@@ -418,7 +431,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 # Endpoint to add a new building
 @app.post("/add_building/")
-def add_building(input_data: BuildingInput, current_user: person = Depends(get_current_user)):
+def add_building(input_data: BuildingInput, request: Request, response: Response, current_user: person = Depends(get_current_user)):
     try:
         with get_session() as session:
             building = Building(
@@ -432,7 +445,9 @@ def add_building(input_data: BuildingInput, current_user: person = Depends(get_c
             )
             session.add(building)
             session.commit()
-            return {"message": "Building added successfully", "building": building}
+            response.set_cookie(key="current_building", value=building.building_name)
+            return building
+            #return {"message": "Building added successfully", "building": building}
     except SQLAlchemyError as e:
             session.rollback()
             logging.error(f"Database error: {str(e)}")
@@ -442,7 +457,19 @@ def add_building(input_data: BuildingInput, current_user: person = Depends(get_c
             logging.error(f"An unexpected error occurred: {str(e)}")
             raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
 
-
+# Get current building endpoint
+@app.get("/current_building/", response_model=BuildingOutput)
+def get_current_building(request: Request, current_user: person = Depends(get_current_user)):
+    current_building_name = request.cookies.get("current_building")
+    if not current_building_name:
+        raise HTTPException(status_code=404, detail="No current building set")
+    
+    with get_session() as session:
+        building = session.query(Building).filter(Building.building_name == current_building_name, Building.owner_id == current_user.id).first()
+        if not building:
+            raise HTTPException(status_code=404, detail="Building not found")
+    
+    return building
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):

@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { Menu, Button, Checkbox, Form, Header } from 'semantic-ui-react';
 
 const ServicesApplications = () => {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [currentBuilding, setCurrentBuilding] = useState(null);
+
     const [activeDomain, setActiveDomain] = useState('Heating');
     const [domains] = useState([
         'Heating', 'Domestic hot water', 'Cooling', 'Ventilation', 'Lighting',
@@ -14,6 +17,26 @@ const ServicesApplications = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+
+        const fetchCurrentUser = async () => {
+            const token = localStorage.getItem("token");
+            try {
+              const response = await axios.get("http://localhost:8000/profile/", {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              setCurrentUser(response.data);
+            } catch (error) {
+              console.error("Error fetching current user", error);
+            }
+        };
+
+        const fetchCurrentBuilding = () => {
+            const building = JSON.parse(localStorage.getItem("currentBuilding"));
+            if (building) {
+              setCurrentBuilding(building);
+            }
+        };
+      
         const fetchServices = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/services/${activeDomain}`);
@@ -28,6 +51,9 @@ const ServicesApplications = () => {
                 console.error('Failed to fetch services', error);
             }
         };
+
+        fetchCurrentUser();
+        fetchCurrentBuilding();
 
         fetchServices();
     }, [activeDomain]);
@@ -66,6 +92,12 @@ const ServicesApplications = () => {
     return (
         <div style={{ padding: '20px' }}>
             <Header as='h2'>Services & Applications</Header>
+            {currentUser && currentBuilding && (
+                <div>
+                    <p>Current User: {currentUser.username}</p>
+                    <p>Current Building: {currentBuilding.building_name}</p>
+                </div>
+            )}
             <Menu vertical>
                 {domains.map(domain => (
                     <Menu.Item

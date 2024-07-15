@@ -23,11 +23,12 @@ const BuildingForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post("http://localhost:8000/add_building/", formData, {
+      const response = await axios.post("http://localhost:8000/add_building/", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      localStorage.setItem('currentBuilding', JSON.stringify(response.data));
       navigate("/services_applications");
     } catch (error) {
       console.error("Error submitting form", error);
