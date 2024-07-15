@@ -1,5 +1,5 @@
 from typing import List, Optional
-from sqlmodel import SQLModel, create_engine, Session
+from sqlmodel import SQLModel, create_engine, Session, select, text
 import pandas as pd
 from sqlmodel import Field, Relationship
 from passlib.context import CryptContext
@@ -107,7 +107,10 @@ def get_session():
     finally:
         session.close()
 
-
+def truncate_tables():
+    with get_session() as session:
+        session.execute(text("TRUNCATE TABLE domain_w, impact_w, levels, services RESTART IDENTITY CASCADE;"))
+        session.commit()
 
 def load_data_from_csv():
     data1 = pd.read_csv(csv_file_path1, delimiter=',')
@@ -133,66 +136,67 @@ def load_data_from_csv():
         data3[field] = pd.to_numeric(data3[field], errors='coerce').fillna(0)
 
     with get_session() as session:
-        for _, row in data1.iterrows():
-            domain_w = Domain_W(
-                building_type=row['building_type'],
-                zone=row['zone'],
-                domain=row['domain'],
-                dw_cr1=row['dw_cr1'],
-                dw_cr2=row['dw_cr2'],
-                dw_cr3=row['dw_cr3'],
-                dw_cr4=row['dw_cr4'],
-                dw_cr5=row['dw_cr5'],
-                dw_cr6=row['dw_cr6'],
-                dw_cr7=row['dw_cr7'],
-            )
-            session.add(domain_w)
-        
-        for _, row in data2.iterrows():
-            impact_w = Impact_W(
-                building_type=row['building_type'],
-                zone=row['zone'],
-                imp_cr1=row['imp_cr1'],
-                imp_cr2=row['imp_cr2'],
-                imp_cr3=row['imp_cr3'],
-                imp_cr4=row['imp_cr4'],
-                imp_cr5=row['imp_cr5'],
-                imp_cr6=row['imp_cr6'],
-                imp_cr7=row['imp_cr7'],
-            )
-            session.add(impact_w)
-        
-        for _, row in data3.iterrows():
-            # Check for NaN values in critical fields
-            if pd.isna(row['description']):
-                raise ValueError("Invalid description found")
-            if not isinstance(row['mandatory'], bool):
-                raise ValueError("Mandatory field should be a boolean")
-            levels = Levels(
-                code=row['code'],
-                level_desc=row['level_desc'],
-                description=row['description'],
-                score_cr1=row['score_cr1'],
-                score_cr2=row['score_cr2'],
-                score_cr3=row['score_cr3'],
-                score_cr4=row['score_cr4'],
-                score_cr5=row['score_cr5'],
-                score_cr6=row['score_cr6'],
-                score_cr7=row['score_cr7'],
-                level=row['level'],
-                mandatory=row['mandatory'],
-                domain=row['domain']
-            )
-            session.add(levels)
-        
-        for _, row in data4.iterrows():
-            services = Services(
-                domain=row['Domain'],
-                code=row['Code'],
-                service_group=row['service_group'],
-                service_desc=row['service_desc']
-            )
-            session.add(services)
+        if not session.exec(select(Domain_W)).all():
+            for _, row in data1.iterrows():
+                domain_w = Domain_W(
+                    building_type=row['building_type'],
+                    zone=row['zone'],
+                    domain=row['domain'],
+                    dw_cr1=row['dw_cr1'],
+                    dw_cr2=row['dw_cr2'],
+                    dw_cr3=row['dw_cr3'],
+                    dw_cr4=row['dw_cr4'],
+                    dw_cr5=row['dw_cr5'],
+                    dw_cr6=row['dw_cr6'],
+                    dw_cr7=row['dw_cr7'],
+                )
+                session.add(domain_w)
+        if not session.exec(select(Impact_W)).all():    
+            for _, row in data2.iterrows():
+                impact_w = Impact_W(
+                    building_type=row['building_type'],
+                    zone=row['zone'],
+                    imp_cr1=row['imp_cr1'],
+                    imp_cr2=row['imp_cr2'],
+                    imp_cr3=row['imp_cr3'],
+                    imp_cr4=row['imp_cr4'],
+                    imp_cr5=row['imp_cr5'],
+                    imp_cr6=row['imp_cr6'],
+                    imp_cr7=row['imp_cr7'],
+                )
+                session.add(impact_w)
+        if not session.exec(select(Levels)).all():    
+            for _, row in data3.iterrows():
+                # Check for NaN values in critical fields
+                if pd.isna(row['description']):
+                    raise ValueError("Invalid description found")
+                if not isinstance(row['mandatory'], bool):
+                    raise ValueError("Mandatory field should be a boolean")
+                levels = Levels(
+                    code=row['code'],
+                    level_desc=row['level_desc'],
+                    description=row['description'],
+                    score_cr1=row['score_cr1'],
+                    score_cr2=row['score_cr2'],
+                    score_cr3=row['score_cr3'],
+                    score_cr4=row['score_cr4'],
+                    score_cr5=row['score_cr5'],
+                    score_cr6=row['score_cr6'],
+                    score_cr7=row['score_cr7'],
+                    level=row['level'],
+                    mandatory=row['mandatory'],
+                    domain=row['domain']
+                )
+                session.add(levels)
+        if not session.exec(select(Services)).all():    
+            for _, row in data4.iterrows():
+                services = Services(
+                    domain=row['Domain'],
+                    code=row['Code'],
+                    service_group=row['service_group'],
+                    service_desc=row['service_desc']
+                )
+                session.add(services)
         
         session.commit()
 
@@ -201,6 +205,9 @@ def load_data_from_csv():
 
 # Create the database tables
 def create_db_and_tables():
-    #SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
 
+# Function to reset and load data
+def reset_and_load_data():
+    truncate_tables()
+    load_data_from_csv()

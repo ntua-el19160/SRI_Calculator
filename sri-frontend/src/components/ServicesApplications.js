@@ -41,9 +41,13 @@ const ServicesApplications = () => {
             try {
                 const response = await axios.get(`http://localhost:8000/services/${activeDomain}`);
                 const serviceData = response.data;
-                setServices(serviceData);
+
+                // Filter out services with descriptions like 'User defined smart service (Number)'
+                const filteredServiceData = serviceData.filter(service => !/User defined smart ready service \(\d+\)/.test(service.service_desc));
+                
+                setServices(filteredServiceData);
                 const selections = {};
-                serviceData.forEach(service => {
+                filteredServiceData.forEach(service => {
                     selections[service.service_desc] = { active: false, levels: [], level: null };
                 });
                 setDomainSelections(selections);

@@ -64,31 +64,6 @@ DHW-3;level 1;Indication of actual values (e.g. temperatures, submetering energy
 DHW-3;level 2;Actual values and historical data;1;0;0;0;0;1;2;2;1;Domestic hot water
 DHW-3;level 3;Performance evaluation including forecasting and/or benchmarking;1;0;0;0;0;1;3;3;1;Domestic hot water
 DHW-3;level 4;"Performance evaluation including forecasting and/or benchmarking; also including predictive management and fault detection";1;0;0;1;0;2;3;4;1;Domestic hot water
-DHW-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Domestic hot water
-DHW-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Domestic hot water
-DHW-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Domestic hot water
-DHW-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Domestic hot water
-DHW-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Domestic hot water
-DHW-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Domestic hot water
-DHW-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Domestic hot water
-DHW-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Domestic hot water
-DHW-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Domestic hot water
-DHW-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Domestic hot water
-DHW-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Domestic hot water
-DHW-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Domestic hot water
-DHW-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Domestic hot water
-DHW-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Domestic hot water
-DHW-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Domestic hot water
-DHW-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Domestic hot water
-DHW-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Domestic hot water
-DHW-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Domestic hot water
-DHW-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Domestic hot water
-DHW-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Domestic hot water
-DHW-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Domestic hot water
-DHW-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Domestic hot water
-DHW-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Domestic hot water
-DHW-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Domestic hot water
-DHW-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Domestic hot water
 C-1a;level 0;No automatic control;0;0;0;0;0;0;0;0;0;Cooling
 C-1a;level 1;Central automatic control;1;0;1;1;1;0;0;1;0;Cooling
 C-1a;level 2;Individual room control;1;0;1;2;2;0;0;2;0;Cooling
@@ -132,31 +107,6 @@ C-4;level 1;Scheduled operation of cooling system;1;0;1;1;0;0;0;1;1;Cooling
 C-4;level 2;Self-learning optimal control of cooling system;2;1;2;2;0;0;0;2;1;Cooling
 C-4;level 3;Cooling system capable of flexible control through grid signals (e.g. DSM) ;2;3;2;3;0;0;0;3;1;Cooling
 C-4;level 4;Optimized control of  cooling system based on local predictions and grid signals (e.g. through model predictive control);2;3;3;3;1;0;0;4;1;Cooling
-C-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Cooling
-C-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Cooling
-C-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Cooling
-C-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Cooling
-C-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Cooling
-C-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Cooling
-C-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Cooling
-C-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Cooling
-C-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Cooling
-C-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Cooling
-C-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Cooling
-C-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Cooling
-C-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Cooling
-C-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Cooling
-C-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Cooling
-C-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Cooling
-C-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Cooling
-C-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Cooling
-C-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Cooling
-C-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Cooling
-C-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Cooling
-C-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Cooling
-C-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Cooling
-C-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Cooling
-C-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Cooling
 V-1a;level 0;No ventilation system or manual control;0;0;0;0;0;0;0;0;1;Ventilation
 V-1a;level 1;Clock control;1;0;1;1;1;0;0;1;1;Ventilation
 V-1a;level 2;Occupancy detection control;1;0;2;2;2;0;0;2;1;Ventilation
@@ -186,31 +136,6 @@ V-6;level 0;None;0;0;0;0;0;0;0;0;1;Ventilation
 V-6;level 1;Air quality sensors (e.g. CO2) and real time autonomous monitoring;0;0;0;0;2;1;1;1;1;Ventilation
 V-6;level 2;Real time monitoring & historical information of IAQ available to occupants;0;0;0;0;3;1;2;2;1;Ventilation
 V-6;level 3;Real time monitoring & historical information of IAQ available to occupants + warning on maintenance needs or occupant actions (e.g. window opening);0;0;0;0;3;2;3;3;1;Ventilation
-V-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Ventilation
-V-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Ventilation
-V-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Ventilation
-V-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Ventilation
-V-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Ventilation
-V-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Ventilation
-V-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Ventilation
-V-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Ventilation
-V-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Ventilation
-V-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Ventilation
-V-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Ventilation
-V-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Ventilation
-V-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Ventilation
-V-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Ventilation
-V-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Ventilation
-V-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Ventilation
-V-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Ventilation
-V-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Ventilation
-V-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Ventilation
-V-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Ventilation
-V-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Ventilation
-V-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Ventilation
-V-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Ventilation
-V-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Ventilation
-V-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Ventilation
 L-1a;level 0;Manual on/off switch;0;0;0;0;0;0;0;0;1;Lighting
 L-1a;level 1;Manual on/off switch + additional sweeping extinction signal;1;0;1;1;0;0;0;1;1;Lighting
 L-1a;level 2;Automatic detection (auto on / dimmed or auto off);2;0;2;2;0;0;0;2;;Lighting
@@ -224,31 +149,6 @@ adapted lighting scenes are set, for example, in terms of
 illuminance level, different correlated colour temperature (CCT)
 and the possibility to change the light distribution within the space
 according to e. g. design, human needs, visual tasks)";3;0;3;3;3;0;0;4;1;Lighting
-L-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Lighting
-L-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Lighting
-L-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Lighting
-L-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Lighting
-L-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Lighting
-L-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Lighting
-L-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Lighting
-L-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Lighting
-L-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Lighting
-L-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Lighting
-L-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Lighting
-L-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Lighting
-L-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Lighting
-L-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Lighting
-L-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Lighting
-L-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Lighting
-L-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Lighting
-L-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Lighting
-L-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Lighting
-L-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Lighting
-L-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Lighting
-L-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Lighting
-L-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Lighting
-L-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Lighting
-L-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Lighting
 DE-1;level 0;No sun shading or only manual operation;0;0;0;0;0;0;0;0;0;Dynamic building envelope
 DE-1;level 1;Motorized operation with manual control;1;0;1;1;0;0;0;1;0;Dynamic building envelope
 DE-1;level 2;Motorized operation with automatic control based on sensor data;2;0;1;2;1;0;0;2;0;Dynamic building envelope
@@ -263,31 +163,6 @@ DE-4;level 1;Position of each product & fault detection;0;0;0;0;0;1;1;1;0;Dynami
 DE-4;level 2;Position of each product, fault detection & predictive maintenance;0;0;0;0;0;1;2;2;0;Dynamic building envelope
 DE-4;level 3;Position of each product, fault detection, predictive maintenance, real-time sensor data (wind, lux, temperature);0;0;0;0;0;1;3;3;0;Dynamic building envelope
 DE-4;level 4;Position of each product, fault detection, predictive maintenance, real-time & historical sensor data (wind, lux, temperature);0;0;0;1;0;2;3;4;0;Dynamic building envelope
-DE-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Dynamic building envelope
-DE-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Dynamic building envelope
-DE-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Dynamic building envelope
-DE-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Dynamic building envelope
-DE-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Dynamic building envelope
-DE-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Dynamic building envelope
-DE-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Dynamic building envelope
-DE-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Dynamic building envelope
-DE-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Dynamic building envelope
-DE-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Dynamic building envelope
-DE-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Dynamic building envelope
-DE-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Dynamic building envelope
-DE-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Dynamic building envelope
-DE-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Dynamic building envelope
-DE-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Dynamic building envelope
-DE-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Dynamic building envelope
-DE-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Dynamic building envelope
-DE-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Dynamic building envelope
-DE-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Dynamic building envelope
-DE-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Dynamic building envelope
-DE-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Dynamic building envelope
-DE-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Dynamic building envelope
-DE-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Dynamic building envelope
-DE-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Dynamic building envelope
-DE-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Dynamic building envelope
 E-2;level 0;None;0;0;0;0;0;0;0;0;0;Electricity
 E-2;level 1;Current generation data available;1;0;0;0;0;1;1;1;0;Electricity
 E-2;level 2;Actual values and historical data;1;0;0;0;0;1;2;2;0;Electricity
@@ -319,31 +194,6 @@ E-12;level 1;reporting on current electricity consumption on building level;0;0;
 E-12;level 2;real-time feedback or benchmarking on building level;1;0;0;0;0;0;2;2;1;Electricity
 E-12;level 3;real-time feedback or benchmarking on appliance level;2;0;0;0;0;1;3;3;1;Electricity
 E-12;level 4;real-time feedback or benchmarking on appliance level with automated personalized recommendations;3;0;0;1;0;2;3;4;1;Electricity
-E-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electricity
-E-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electricity
-E-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electricity
-E-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electricity
-E-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electricity
-E-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electricity
-E-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electricity
-E-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electricity
-E-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electricity
-E-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electricity
-E-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electricity
-E-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electricity
-E-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electricity
-E-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electricity
-E-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electricity
-E-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electricity
-E-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electricity
-E-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electricity
-E-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electricity
-E-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electricity
-E-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electricity
-E-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electricity
-E-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electricity
-E-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electricity
-E-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electricity
 EV-15;level 0;not present;0;0;0;0;0;0;0;0;0;Electric vehicle charging
 EV-15;level 1;ducting (or simple power plug) available;0;0;0;1;0;0;0;1;0;Electric vehicle charging
 EV-15;level 2;0-9% of parking spaces has recharging points;0;0;0;2;0;0;0;2;0;Electric vehicle charging
@@ -355,31 +205,6 @@ EV-16;level 2;2-way controlled charging (e.g. including desired departure time a
 EV-17;level 0;No information available;0;0;0;0;0;0;0;0;0;Electric vehicle charging
 EV-17;level 1;Reporting information on EV charging status to occupant;0;0;0;1;0;0;2;1;0;Electric vehicle charging
 EV-17;level 2;Reporting information on EV charging status to occupant AND automatic identification and authorizition of the driver to the charging station (ISO 15118 compliant);0;1;0;1;0;0;3;2;0;Electric vehicle charging
-EV-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electric vehicle charging
-EV-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electric vehicle charging
-EV-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electric vehicle charging
-EV-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electric vehicle charging
-EV-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electric vehicle charging
-EV-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electric vehicle charging
-EV-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electric vehicle charging
-EV-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electric vehicle charging
-EV-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electric vehicle charging
-EV-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electric vehicle charging
-EV-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electric vehicle charging
-EV-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electric vehicle charging
-EV-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electric vehicle charging
-EV-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electric vehicle charging
-EV-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electric vehicle charging
-EV-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electric vehicle charging
-EV-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electric vehicle charging
-EV-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electric vehicle charging
-EV-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electric vehicle charging
-EV-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electric vehicle charging
-EV-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Electric vehicle charging
-EV-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Electric vehicle charging
-EV-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Electric vehicle charging
-EV-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Electric vehicle charging
-EV-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Electric vehicle charging
 MC-3;level 0;Manual setting ;0;0;0;0;0;0;0;0;1;Monitoring and control
 MC-3;level 1;Runtime setting of heating and cooling plants following a predefined time schedule ;1;1;1;1;0;0;0;1;1;Monitoring and control
 MC-3;level 2;Heating and cooling plant on/off control based on building loads;2;1;2;2;1;0;0;2;1;Monitoring and control
@@ -410,28 +235,3 @@ MC-30;level 0;None;0;0;0;0;0;0;0;0;1;Monitoring and control
 MC-30;level 1;Single platform that allows manual control of multiple TBS;0;0;0;1;0;1;0;1;1;Monitoring and control
 MC-30;level 2;Single platform that allows automated control & coordination between TBS;1;0;0;2;0;1;0;2;1;Monitoring and control
 MC-30;level 3;Single platform that allows automated control & coordination between TBS + optimization of energy flow based on occupancy, weather and grid signals;2;0;0;3;0;1;0;3;1;Monitoring and control
-MC-E1;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Monitoring and control
-MC-E1;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Monitoring and control
-MC-E1;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Monitoring and control
-MC-E1;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Monitoring and control
-MC-E1;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Monitoring and control
-MC-E2;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Monitoring and control
-MC-E2;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Monitoring and control
-MC-E2;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Monitoring and control
-MC-E2;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Monitoring and control
-MC-E2;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Monitoring and control
-MC-E3;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Monitoring and control
-MC-E3;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Monitoring and control
-MC-E3;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Monitoring and control
-MC-E3;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Monitoring and control
-MC-E3;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Monitoring and control
-MC-E4;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Monitoring and control
-MC-E4;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Monitoring and control
-MC-E4;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Monitoring and control
-MC-E4;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Monitoring and control
-MC-E4;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Monitoring and control
-MC-E5;level 0;User defined level 1-0;0;0;0;0;0;0;0;0;0;Monitoring and control
-MC-E5;level 1;User defined level 1-1;0;0;0;0;0;0;0;1;0;Monitoring and control
-MC-E5;level 2;User defined level 1-2;0;0;0;0;0;0;0;2;0;Monitoring and control
-MC-E5;level 3;User defined level 1-3;0;0;0;0;0;0;0;3;0;Monitoring and control
-MC-E5;level 4;User defined level 1-4;0;0;0;0;0;0;0;4;0;Monitoring and control
