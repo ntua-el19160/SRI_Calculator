@@ -299,7 +299,6 @@ def calculate_sr_domains(weighted_domain_sums, weighted_max_domain_sums):
     return sr_domains
 
 
-
 # Function to calculate SRf scores for each key functionality
 def calculate_srf_scores(sr_impact_criteria):
     srf_scores = {}  # Initialize the SRf scores dictionary
@@ -333,77 +332,6 @@ def calculate_total_sri(srf_scores: Dict[str, float]):
     return round(total_sri, 2)  # Round to two decimal places
 
 
-
-
-# Endpoint to calculate SRI
-@app.post("/calculate-sri/", response_model=SRIOutput)
-def calculate_sri(input_data: SRIInput):
-    try:
-        validate_numeric_data(input_data.lev)  # Validate numeric fields
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
-    try:
-        # Calculate the domain-impact criteria scores and additional metrics
-        calculated_scores = calculate_scores(input_data)
-        
-        # Ensure returned value is a dictionary
-        if not isinstance(calculated_scores, dict):
-            raise HTTPException(status_code=500, detail="Unexpected return value from calculate_scores()")
-
-        domain_impact_scores = calculated_scores.get("domain_impact_scores", {})
-        domain_max_scores = calculated_scores.get("domain_max_scores", {})
-        smart_readiness_scores = calculated_scores.get("smart_readiness_scores", {})
-
-        # Calculate the weighted sums for each impact criterion
-        weighted_sums = calculate_weighted_sums(input_data, domain_impact_scores)
-        weighted_max_sums = calculate_weighted_sums(input_data, domain_max_scores)
-        
-        sr_impact_criteria = {}  # New dictionary for SR(ic) percentages
-
-        # Calculate SR(ic) as (weighted_sums[ic] / weighted_max_sums[ic]) * 100
-        for ic in weighted_sums:
-            weighted_sum = weighted_sums[ic]
-            weighted_max_sum = weighted_max_sums[ic]
-
-            if weighted_max_sum != 0:
-                sr_percentage = (weighted_sum / weighted_max_sum) * 100
-            else:
-                sr_percentage = 0  # Default to zero if division by zero risk
-
-            sr_impact_criteria[ic] = round(sr_percentage, 2)  # Round to two decimal places
-
-        # Calculate SRf scores for each key functionality
-        srf_scores = calculate_srf_scores(sr_impact_criteria)
-
-        # Calculate the total SRI score
-        total_sri = calculate_total_sri(srf_scores)
-
-        # Calculate the weighted sums for each domain
-        weighted_domain_sums = calculate_weighted_domain_sums(domain_impact_scores)
-        weighted_max_domain_sums = calculate_weighted_domain_sums(domain_max_scores)
-        
-        # Calculate SR(d) for each domain
-        sr_domains = calculate_sr_domains(weighted_domain_sums, weighted_max_domain_sums)
-
-
-    except SQLAlchemyError as e:
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
-
-    # Return all expected results
-    return {
-        "domain_impact_scores": domain_impact_scores,
-        "domain_max_scores": domain_max_scores,
-        "smart_readiness_scores": smart_readiness_scores,
-        "weighted_impact_sums": weighted_sums,
-        "weighted_max_sums": weighted_max_sums,
-        "sr_impact_criteria": sr_impact_criteria,  
-        "sr_domains": sr_domains,
-        "srf_scores": srf_scores,
-        "total_sri": total_sri
-    }
-
 # Dependency to get the current user
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -424,10 +352,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         if user is None:
             raise credentials_exception
     return user
-
-
-
-
 
 # Endpoint to add a new building
 @app.post("/add_building/")
@@ -582,11 +506,92 @@ def get_services(domain_name: str):
 @app.get("/levels/{service_code}")
 def get_levels(service_code: str):
     with get_session() as session:
-        statement = select(Levels).distinct(Levels.level_desc, Levels.description, Levels.code).where(Levels.code == service_code)
+        statement = select(Levels).distinct(Levels.level_desc, Levels.description, Levels.code, Levels.level).where(Levels.code == service_code)
         results = session.exec(statement).all()
         return JSONResponse(content=[result.dict() for result in results])
 
 
+@app.post("/save_sri_levels/")
+def save_sri_levels(sri_levels: SRIInput):    
+    with get_session() as session:
+        # Create the JSON structure
+        sri_json = {
+            "building_type": sri_levels.building_type,
+            "zone": sri_levels.zone,
+            "lev": sri_levels.lev
+        }
+    return JSONResponse(sri_json)
+    #return {"message": "SRI levels saved successfully", "sri_json": sri_json}
+    
+
+@app.post("/calculate-sri/", response_model=SRIOutput)
+def calculate_sri(user_input: SRIInput):
+
+    try:
+        validate_numeric_data(user_input.lev)  # Validate numeric fields
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    try:
+        # Calculate the domain-impact criteria scores and additional metrics
+        calculated_scores = calculate_scores(user_input)
+        
+        # Ensure returned value is a dictionary
+        if not isinstance(calculated_scores, dict):
+            raise HTTPException(status_code=500, detail="Unexpected return value from calculate_scores()")
+
+        domain_impact_scores = calculated_scores.get("domain_impact_scores", {})
+        domain_max_scores = calculated_scores.get("domain_max_scores", {})
+        smart_readiness_scores = calculated_scores.get("smart_readiness_scores", {})
+
+        # Calculate the weighted sums for each impact criterion
+        weighted_sums = calculate_weighted_sums(user_input, domain_impact_scores)
+        weighted_max_sums = calculate_weighted_sums(user_input, domain_max_scores)
+        
+        sr_impact_criteria = {}  # New dictionary for SR(ic) percentages
+
+        # Calculate SR(ic) as (weighted_sums[ic] / weighted_max_sums[ic]) * 100
+        for ic in weighted_sums:
+            weighted_sum = weighted_sums[ic]
+            weighted_max_sum = weighted_max_sums[ic]
+
+            if weighted_max_sum != 0:
+                sr_percentage = (weighted_sum / weighted_max_sum) * 100
+            else:
+                sr_percentage = 0  # Default to zero if division by zero risk
+
+            sr_impact_criteria[ic] = round(sr_percentage, 2)  # Round to two decimal places
+
+        # Calculate SRf scores for each key functionality
+        srf_scores = calculate_srf_scores(sr_impact_criteria)
+
+        # Calculate the total SRI score
+        total_sri = calculate_total_sri(srf_scores)
+
+        # Calculate the weighted sums for each domain
+        weighted_domain_sums = calculate_weighted_domain_sums(domain_impact_scores)
+        weighted_max_domain_sums = calculate_weighted_domain_sums(domain_max_scores)
+        
+        # Calculate SR(d) for each domain
+        sr_domains = calculate_sr_domains(weighted_domain_sums, weighted_max_domain_sums)
+
+
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
+    # Return all expected results
+    return {
+        "domain_impact_scores": domain_impact_scores,
+        "domain_max_scores": domain_max_scores,
+        "smart_readiness_scores": smart_readiness_scores,
+        "weighted_impact_sums": weighted_sums,
+        "weighted_max_sums": weighted_max_sums,
+        "sr_impact_criteria": sr_impact_criteria,  
+        "sr_domains": sr_domains,
+        "srf_scores": srf_scores,
+        "total_sri": total_sri
+    }
 
 @app.on_event("startup")
 async def startup_event():

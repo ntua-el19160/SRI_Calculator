@@ -8,6 +8,7 @@ import PresentDomains from './components/PresentDomains';
 import ServicesApplications from './components/ServicesApplications';
 import Profile from './components/Profile';
 import MyBuildings from './components/MyBuildings';
+import SRIScore from './components/SRIScore';
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/add_building" element={<BuildingForm />} />
                 <Route path="/present_domains" element={<PresentDomains />} />
                 <Route path="/services_applications" element={<ServicesApplications />} />
+                <Route path="/sri-score" element={<SRIScore />} />
             </Routes>
         </Router>
     );

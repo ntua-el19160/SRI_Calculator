@@ -14,6 +14,7 @@ const ServicesApplications = () => {
     ]);
     const [services, setServices] = useState([]);
     const [domainSelections, setDomainSelections] = useState({});
+    const [servicesByDomain, setServicesByDomain] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -41,16 +42,31 @@ const ServicesApplications = () => {
             try {
                 const response = await axios.get(`http://localhost:8000/services/${activeDomain}`);
                 const serviceData = response.data;
-
-                // Filter out services with descriptions like 'User defined smart service (Number)'
+        
+                // Filter out services with descriptions like 'User defined smart ready service (Number)'
                 const filteredServiceData = serviceData.filter(service => !/User defined smart ready service \(\d+\)/.test(service.service_desc));
-                
+        
                 setServices(filteredServiceData);
-                const selections = {};
-                filteredServiceData.forEach(service => {
-                    selections[service.service_desc] = { active: false, levels: [], level: null };
+        
+                // Update servicesByDomain state
+                setServicesByDomain(prev => ({
+                    ...prev,
+                    [activeDomain]: filteredServiceData
+                }));
+        
+                // Initialize selections for the current domain if not already present
+                setDomainSelections(prev => {
+                    const currentDomainSelections = prev[activeDomain] || {};
+                    filteredServiceData.forEach(service => {
+                        if (!currentDomainSelections[service.service_desc]) {
+                            currentDomainSelections[service.service_desc] = { active: false, levels: [], level: null };
+                        }
+                    });
+                    return {
+                        ...prev,
+                        [activeDomain]: currentDomainSelections
+                    };
                 });
-                setDomainSelections(selections);
             } catch (error) {
                 console.error('Failed to fetch services', error);
             }
@@ -63,34 +79,97 @@ const ServicesApplications = () => {
     }, [activeDomain]);
 
     const handleServiceToggle = async (service) => {
-        const updatedSelections = { ...domainSelections };
-        updatedSelections[service.service_desc].active = !updatedSelections[service.service_desc].active;
-        setDomainSelections(updatedSelections);
-
-        if (!domainSelections[service.service_desc].levels.length) {
-            try {
-                const response = await axios.get(`http://localhost:8000/levels/${service.code}`);
-                const levelData = response.data.map(level => level.level_desc + ": " + level.description);
-                updatedSelections[service.service_desc].levels = levelData;
-                setDomainSelections(updatedSelections);
-            } catch (error) {
-                console.error('Failed to fetch levels', error);
+        setDomainSelections(prev => {
+            const currentDomainSelections = prev[activeDomain] || {};
+            const currentServiceSelection = currentDomainSelections[service.service_desc] || { active: false, levels: [], level: null };
+            const updatedServiceSelection = {
+                ...currentServiceSelection,
+                active: !currentServiceSelection.active
+            };
+    
+            // Fetch levels if the service is being activated and levels are not already fetched
+            if (!currentServiceSelection.levels.length && !currentServiceSelection.active) {
+                axios.get(`http://localhost:8000/levels/${service.code}`)
+                    .then(response => {
+                        const levelData = response.data.map(level => ({
+                            desc: level.level_desc + ": " + level.description,
+                            intLevel: level.level
+                        }));
+                        setDomainSelections(prev => {
+                            const updatedSelections = { ...prev };
+                            updatedSelections[activeDomain][service.service_desc].levels = levelData;
+                            return updatedSelections;
+                        });
+                    })
+                    .catch(error => console.error('Failed to fetch levels', error));
             }
-        }
+    
+            return {
+                ...prev,
+                [activeDomain]: {
+                    ...currentDomainSelections,
+                    [service.service_desc]: updatedServiceSelection
+                }
+            };
+        });
     };
 
     const handleLevelChange = (service, level) => {
-        setDomainSelections(prev => ({
-            ...prev,
-            [service.service_desc]: {
-                ...prev[service.service_desc],
-                level
-            }
-        }));
+        setDomainSelections(prev => {
+            const currentDomainSelections = prev[activeDomain] || {};
+            return {
+                ...prev,
+                [activeDomain]: {
+                    ...currentDomainSelections,
+                    [service.service_desc]: {
+                        ...currentDomainSelections[service.service_desc],
+                        level
+                    }
+                }
+            };
+        });
     };
 
     const handleSubmit = () => {
-        navigate('/next-page'); // Replace with the actual next page route
+        const token = localStorage.getItem("token");
+    
+        if (!token) {
+            console.error("No token found. Please log in.");
+            return;
+        }
+    
+        const sriInput = {
+            building_type: currentBuilding.building_type,
+            zone: currentBuilding.zone,
+            lev: {}
+        };
+    
+        // Iterate through domainSelections to construct the lev object
+        for (const domain in domainSelections) {
+            for (const serviceDesc in domainSelections[domain]) {
+                const selection = domainSelections[domain][serviceDesc];
+                if (selection.active && selection.level) {
+                    // Find the service code corresponding to the service description
+                    const service = Object.values(servicesByDomain).flat().find(s => s.service_desc === serviceDesc);
+                    if (service) {
+                        sriInput.lev[service.code] = selection.level.intLevel; // Use service.code here
+                    }
+                }
+            }
+        }
+    
+        console.log(sriInput);
+    
+        axios.post('http://localhost:8000/calculate-sri/', sriInput, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(response => {
+            console.log('SRI calculation successful', response.data);
+            navigate('/sri-score', { state: { sriScore: response.data.total_sri } }); // Navigate to the SRI score page with the calculated score
+        })
+        .catch(error => {
+            console.error('Failed to calculate SRI', error);
+        });
     };
 
     return (
@@ -121,18 +200,18 @@ const ServicesApplications = () => {
                             <span>{service.service_desc}</span>
                             <Checkbox
                                 toggle
-                                checked={domainSelections[service.service_desc]?.active || false}
+                                checked={domainSelections[activeDomain]?.[service.service_desc]?.active || false}
                                 onChange={() => handleServiceToggle(service)}
                             />
                         </div>
-                        {domainSelections[service.service_desc]?.active && (
+                        {domainSelections[activeDomain]?.[service.service_desc]?.active && (
                             <Form>
-                                {domainSelections[service.service_desc].levels.map(level => (
-                                    <Form.Field key={level}>
+                                {domainSelections[activeDomain]?.[service.service_desc]?.levels.map(level => (
+                                    <Form.Field key={level.intLevel}>
                                         <Checkbox
                                             radio
-                                            label={level}
-                                            checked={domainSelections[service.service_desc]?.level === level}
+                                            label={level.desc}
+                                            checked={domainSelections[activeDomain]?.[service.service_desc]?.level?.intLevel === level.intLevel}
                                             onChange={() => handleLevelChange(service, level)}
                                         />
                                     </Form.Field>
@@ -145,116 +224,225 @@ const ServicesApplications = () => {
             <Button primary onClick={handleSubmit}>Confirm</Button>
         </div>
     );
-};
+}  
 
 export default ServicesApplications;
 
-
-
-
-
-
-// import React, { useState } from 'react';
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 // import { Menu, Button, Checkbox, Form, Header } from 'semantic-ui-react';
 
 // const ServicesApplications = () => {
+//     const [currentUser, setCurrentUser] = useState(null);
+//     const [currentBuilding, setCurrentBuilding] = useState(null);
+
 //     const [activeDomain, setActiveDomain] = useState('Heating');
-//     const [domainSelections, setDomainSelections] = useState({
-//         'Heating': {},
-//         'Domestic hot water': {},
-//         'Cooling': {},
-//         'Ventilation': {},
-//         'Lighting': {},
-//         'Dynamic building envelope': {},
-//         'Electricity': {},
-//         'Electric vehicle charging': {},
-//         'Monitoring and control': {}
-//     });
-
-//     const navigate = useNavigate();
-
-//     const domains = [
+//     const [domains] = useState([
 //         'Heating', 'Domestic hot water', 'Cooling', 'Ventilation', 'Lighting',
 //         'Dynamic building envelope', 'Electricity', 'Electric vehicle charging', 'Monitoring and control'
-//     ];
+//     ]);
+//     const [services, setServices] = useState([]);
+//     const [domainSelections, setDomainSelections] = useState({});
+//     const [servicesByDomain, setServicesByDomain] = useState({});
+//     const navigate = useNavigate();
 
-//     const services = [
-//         'Service 1', 'Service 2', 'Service 3', 'Service 4', 'Service 5'
-//     ];
+//     useEffect(() => {
 
-//     const levels = [
-//         'Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5'
-//     ];
-
-//     const handleDomainClick = (domain) => {
-//         setActiveDomain(domain);
-//     };
-
-//     const handleServiceToggle = (domain, service) => {
-//         setDomainSelections((prev) => {
-//             const updatedDomain = { ...prev[domain] };
-//             if (updatedDomain[service]) {
-//                 updatedDomain[service] = { ...updatedDomain[service], active: !updatedDomain[service].active };
-//             } else {
-//                 updatedDomain[service] = { active: true, level: null };
+//         const fetchCurrentUser = async () => {
+//             const token = localStorage.getItem("token");
+//             try {
+//               const response = await axios.get("http://localhost:8000/profile/", {
+//                 headers: { Authorization: `Bearer ${token}` },
+//               });
+//               setCurrentUser(response.data);
+//             } catch (error) {
+//               console.error("Error fetching current user", error);
 //             }
-//             return { ...prev, [domain]: updatedDomain };
+//         };
+
+//         const fetchCurrentBuilding = () => {
+//             const building = JSON.parse(localStorage.getItem("currentBuilding"));
+//             if (building) {
+//               setCurrentBuilding(building);
+//             }
+//         };
+      
+//         const fetchServices = async () => {
+//             try {
+//                 const response = await axios.get(`http://localhost:8000/services/${activeDomain}`);
+//                 const serviceData = response.data;
+        
+//                 // Filter out services with descriptions like 'User defined smart ready service (Number)'
+//                 const filteredServiceData = serviceData.filter(service => !/User defined smart ready service \(\d+\)/.test(service.service_desc));
+        
+//                 setServices(filteredServiceData);
+        
+//                 // Update servicesByDomain state
+//                 setServicesByDomain(prev => ({
+//                     ...prev,
+//                     [activeDomain]: filteredServiceData
+//                 }));
+        
+//                 // Initialize selections for the current domain if not already present
+//                 setDomainSelections(prev => {
+//                     const currentDomainSelections = prev[activeDomain] || {};
+//                     filteredServiceData.forEach(service => {
+//                         if (!currentDomainSelections[service.service_desc]) {
+//                             currentDomainSelections[service.service_desc] = { active: false, levels: [], level: null };
+//                         }
+//                     });
+//                     return {
+//                         ...prev,
+//                         [activeDomain]: currentDomainSelections
+//                     };
+//                 });
+//             } catch (error) {
+//                 console.error('Failed to fetch services', error);
+//             }
+//         };
+
+//         fetchCurrentUser();
+//         fetchCurrentBuilding();
+
+//         fetchServices();
+//     }, [activeDomain]);
+
+//     const handleServiceToggle = async (service) => {
+//         setDomainSelections(prev => {
+//             const currentDomainSelections = prev[activeDomain] || {};
+//             const currentServiceSelection = currentDomainSelections[service.service_desc] || { active: false, levels: [], level: null };
+//             const updatedServiceSelection = {
+//                 ...currentServiceSelection,
+//                 active: !currentServiceSelection.active
+//             };
+    
+//             // Fetch levels if the service is being activated and levels are not already fetched
+//             if (!currentServiceSelection.levels.length && !currentServiceSelection.active) {
+//                 axios.get(`http://localhost:8000/levels/${service.code}`)
+//                     .then(response => {
+//                         const levelData = response.data.map(level => ({
+//                             desc: level.level_desc + ": " + level.description,
+//                             intLevel: level.level
+//                         }));
+//                         setDomainSelections(prev => {
+//                             const updatedSelections = { ...prev };
+//                             updatedSelections[activeDomain][service.service_desc].levels = levelData;
+//                             return updatedSelections;
+//                         });
+//                     })
+//                     .catch(error => console.error('Failed to fetch levels', error));
+//             }
+    
+//             return {
+//                 ...prev,
+//                 [activeDomain]: {
+//                     ...currentDomainSelections,
+//                     [service.service_desc]: updatedServiceSelection
+//                 }
+//             };
 //         });
 //     };
 
-//     const handleLevelChange = (domain, service, level) => {
-//         setDomainSelections((prev) => {
-//             const updatedService = { ...prev[domain][service], level };
+//     const handleLevelChange = (service, level) => {
+//         setDomainSelections(prev => {
+//             const currentDomainSelections = prev[activeDomain] || {};
 //             return {
 //                 ...prev,
-//                 [domain]: {
-//                     ...prev[domain],
-//                     [service]: updatedService
+//                 [activeDomain]: {
+//                     ...currentDomainSelections,
+//                     [service.service_desc]: {
+//                         ...currentDomainSelections[service.service_desc],
+//                         level
+//                     }
 //                 }
 //             };
 //         });
 //     };
 
 //     const handleSubmit = () => {
-//         navigate('/next-page'); // Replace with the actual next page route
+//         const token = localStorage.getItem("token");
+    
+//         if (!token) {
+//             console.error("No token found. Please log in.");
+//             return;
+//         }
+    
+//         const sriInput = {
+//             building_type: currentBuilding.building_type,
+//             zone: currentBuilding.zone,
+//             lev: {}
+//         };
+    
+//         // Iterate through domainSelections to construct the lev object
+//         for (const domain in domainSelections) {
+//             for (const serviceDesc in domainSelections[domain]) {
+//                 const selection = domainSelections[domain][serviceDesc];
+//                 if (selection.active && selection.level) {
+//                     // Find the service code corresponding to the service description
+//                     const service = Object.values(servicesByDomain).flat().find(s => s.service_desc === serviceDesc);
+//                     if (service) {
+//                         sriInput.lev[service.code] = selection.level.intLevel; // Use service.code here
+//                     }
+//                 }
+//             }
+//         }
+    
+//         console.log(sriInput);
+    
+//         axios.post('http://localhost:8000/save_sri_levels/', sriInput, {
+//             headers: { Authorization: `Bearer ${token}` }
+//         })
+//         .then(response => {
+//             console.log('SRI levels saved successfully', response.data);
+//             navigate('/next-page'); // Replace with the actual next page route
+//         })
+//         .catch(error => {
+//             console.error('Failed to save SRI levels', error);
+//         });
 //     };
 
 //     return (
 //         <div style={{ padding: '20px' }}>
 //             <Header as='h2'>Services & Applications</Header>
+//             {currentUser && currentBuilding && (
+//                 <div>
+//                     <p>Current User: {currentUser.username}</p>
+//                     <p>Current Building: {currentBuilding.building_name}</p>
+//                 </div>
+//             )}
 //             <Menu vertical>
-//                 {domains.map((domain) => (
+//                 {domains.map(domain => (
 //                     <Menu.Item
 //                         key={domain}
 //                         name={domain}
 //                         active={activeDomain === domain}
-//                         onClick={() => handleDomainClick(domain)}
+//                         onClick={() => setActiveDomain(domain)}
 //                     >
 //                         {domain}
 //                     </Menu.Item>
 //                 ))}
 //             </Menu>
 //             <div style={{ marginTop: '20px' }}>
-//                 {services.map((service) => (
-//                     <div key={service} style={{ border: '1px solid black', marginBottom: '10px', padding: '10px' }}>
+//                 {services.map(service => (
+//                     <div key={service.code} style={{ border: '1px solid black', marginBottom: '10px', padding: '10px' }}>
 //                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-//                             <span>{service}</span>
+//                             <span>{service.service_desc}</span>
 //                             <Checkbox
 //                                 toggle
-//                                 checked={domainSelections[activeDomain][service]?.active || false}
-//                                 onChange={() => handleServiceToggle(activeDomain, service)}
+//                                 checked={domainSelections[activeDomain]?.[service.service_desc]?.active || false}
+//                                 onChange={() => handleServiceToggle(service)}
 //                             />
 //                         </div>
-//                         {domainSelections[activeDomain][service]?.active && (
+//                         {domainSelections[activeDomain]?.[service.service_desc]?.active && (
 //                             <Form>
-//                                 {levels.map((level) => (
-//                                     <Form.Field key={level}>
+//                                 {domainSelections[activeDomain]?.[service.service_desc]?.levels.map(level => (
+//                                     <Form.Field key={level.intLevel}>
 //                                         <Checkbox
 //                                             radio
-//                                             label={level}
-//                                             checked={domainSelections[activeDomain][service]?.level === level}
-//                                             onChange={() => handleLevelChange(activeDomain, service, level)}
+//                                             label={level.desc}
+//                                             checked={domainSelections[activeDomain]?.[service.service_desc]?.level?.intLevel === level.intLevel}
+//                                             onChange={() => handleLevelChange(service, level)}
 //                                         />
 //                                     </Form.Field>
 //                                 ))}
@@ -266,9 +454,6 @@ export default ServicesApplications;
 //             <Button primary onClick={handleSubmit}>Confirm</Button>
 //         </div>
 //     );
-// };
+// }  
 
 // export default ServicesApplications;
-
-
-
