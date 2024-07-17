@@ -165,7 +165,10 @@ const ServicesApplications = () => {
         })
         .then(response => {
             console.log('SRI calculation successful', response.data);
-            navigate('/sri-score', { state: { sriScore: response.data.total_sri } }); // Navigate to the SRI score page with the calculated score
+            localStorage.setItem('sriData', JSON.stringify(response.data)); // Store the SRI data in localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Store the user data in localStorage
+            localStorage.setItem('currentBuilding', JSON.stringify(currentBuilding)); // Store the building data in localStorage
+            navigate('/sri-score'); // Navigate to the SRI score page with the calculated score
         })
         .catch(error => {
             console.error('Failed to calculate SRI', error);

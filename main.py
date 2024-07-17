@@ -91,13 +91,13 @@ class SRIInput(BaseModel):
 
 # Define a Pydantic model for the SRI output
 class SRIOutput(BaseModel):
-    domain_impact_scores: Dict[str, int]  # Domain-impact criteria scores (not necessary)
-    domain_max_scores: Dict[str, int] #not necessary
+    #domain_impact_scores: Dict[str, int]  # Domain-impact criteria scores (not necessary)
+    #domain_max_scores: Dict[str, int] #not necessary
     smart_readiness_scores: Dict[str, float]  # The new percentage score, allowing float
-    weighted_impact_sums: Dict[str, float]  # Weighted sums for each impact criterion (not necessary)
-    weighted_max_sums: Dict[str, float]  # Weighted sums for each impact criterion using lmax(d, ic) (not necessary)
+    #weighted_impact_sums: Dict[str, float]  # Weighted sums for each impact criterion (not necessary)
+    #weighted_max_sums: Dict[str, float]  # Weighted sums for each impact criterion using lmax(d, ic) (not necessary)
     sr_impact_criteria: Dict[str, float]  # New percentage score for each impact criterion
-    sr_domains: Dict[str, float]  # Smart Readiness score for each domain
+    #sr_domains: Dict[str, float]  # Smart Readiness score for each domain
     srf_scores: Dict[str, float] # Percentage for the SRf score for 3 key functionalities
     total_sri: float  # New field for the total SRI score
 
@@ -119,14 +119,22 @@ def calculate_scores(user_input: SRIInput):
         domain_max_scores = {}  # To store Imax(d, ic)
         smart_readiness_scores = {} #to store SR(d, ic) percentage
 
-        domains = [
-            "Heating", "Domestic hot water", "Cooling", "Ventilation", "Lighting",
-            "Electricity", "Dynamic building envelope", "Electric vehicle charging", "Monitoring and control"
+        #domains = [
+         #   "Heating", "Domestic hot water", "Cooling", "Ventilation", "Lighting",
+          #  "Electricity", "Dynamic building envelope", "Electric vehicle charging", "Monitoring and control"
+        #]
+        domains = [ "Cooling", "Dynamic building envelope", "Domestic hot water", "Electricity", "Electric vehicle charging",
+                   "Heating", "Lighting", "Monitoring and control", "Ventilation"
         ]
 
+        #impact_criteria = [
+         #   "Energy efficiency", "Maintenance and fault prediction", "Comfort", "Convenience",
+          #  "Health, wellbeing and accessibility", "Information to occupants", "Energy, flexibility and storage"
+        #]
+
         impact_criteria = [
-            "Energy efficiency", "Maintenance and fault prediction", "Comfort", "Convenience",
-            "Health, wellbeing and accessibility", "Information to occupants", "Energy, flexibility and storage"
+            "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
+            "Information to occupants", "Maintenance and fault prediction"
         ]
 
         # Loop over domains and impact criteria
@@ -203,9 +211,14 @@ def calculate_weighted_sums(user_input: SRIInput, impact_scores: Dict[str, int])
         
 
         # Impact criteria
+        #impact_criteria = [
+         #   "Energy efficiency", "Maintenance and fault prediction", "Comfort", "Convenience",
+          #  "Health, wellbeing and accessibility", "Information to occupants", "Energy, flexibility and storage"
+        #]
+
         impact_criteria = [
-            "Energy efficiency", "Maintenance and fault prediction", "Comfort", "Convenience",
-            "Health, wellbeing and accessibility", "Information to occupants", "Energy, flexibility and storage"
+            "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
+            "Information to occupants", "Maintenance and fault prediction"
         ]
 
         # Initialize the weighted sums dictionary
@@ -582,13 +595,13 @@ def calculate_sri(user_input: SRIInput):
 
     # Return all expected results
     return {
-        "domain_impact_scores": domain_impact_scores,
-        "domain_max_scores": domain_max_scores,
+        #"domain_impact_scores": domain_impact_scores,
+        #"domain_max_scores": domain_max_scores,
         "smart_readiness_scores": smart_readiness_scores,
-        "weighted_impact_sums": weighted_sums,
-        "weighted_max_sums": weighted_max_sums,
+        #"weighted_impact_sums": weighted_sums,
+        #"weighted_max_sums": weighted_max_sums,
         "sr_impact_criteria": sr_impact_criteria,  
-        "sr_domains": sr_domains,
+        #"sr_domains": sr_domains,
         "srf_scores": srf_scores,
         "total_sri": total_sri
     }
