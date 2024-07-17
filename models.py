@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlmodel import SQLModel, create_engine, Session, select, text
 import pandas as pd
-from sqlmodel import Field, Relationship
+from sqlmodel import Field, Relationship, Column, ARRAY, String
 from passlib.context import CryptContext
 from contextlib import contextmanager
 
@@ -94,6 +94,7 @@ class Building(SQLModel, table=True):
     country: str
     city: str
     year_built: int
+    domains: Optional[List[str]] = Field(sa_column=Column(ARRAY(String)))  # Add this line
     owner_id: Optional[int] = Field(default=None, foreign_key="person.id")
     owner: Optional[person] = Relationship(back_populates="buildings")
 

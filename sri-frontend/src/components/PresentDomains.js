@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Container, Header, Grid, Segment } from "semantic-ui-react";
-import 'semantic-ui-css/semantic.min.css';
+import axios from 'axios';
 
-const domains = [
-  "Heating", "Domestic hot water", "Cooling", "Ventilation", "Lighting",
-  "Electricity", "Dynamic building envelope", "Electric vehicle charging", "Monitoring and control"
-];
+const domains = [ "Cooling", "Dynamic building envelope", "Domestic hot water", "Electricity", "Electric vehicle charging",
+                "Heating", "Lighting", "Monitoring and control", "Ventilation"];
 
 const PresentDomains = () => {
   const [selectedDomains, setSelectedDomains] = useState({});
@@ -19,9 +17,23 @@ const PresentDomains = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    navigate('/services_applications');
-};
+  const handleSubmit = async () => {
+    const building = JSON.parse(localStorage.getItem("currentBuilding"));
+    if (building) {
+      const selectedDomainsArray = Object.keys(selectedDomains).filter(domain => selectedDomains[domain]);
+
+      try {
+        const response = await axios.put(`http://localhost:8000/buildings/${building.id}/domains`, {
+          domains: selectedDomainsArray
+        });
+        
+        localStorage.setItem('currentBuilding', JSON.stringify(response.data));
+        navigate('/services_applications');
+      } catch (error) {
+        console.error('Failed to update building domains', error);
+      }
+    }
+  };
 
   return (
     <Container textAlign="center">
@@ -66,4 +78,5 @@ const PresentDomains = () => {
 };
 
 export default PresentDomains;
+
 

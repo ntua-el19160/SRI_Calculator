@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, constr
-from typing import Dict, List
+from typing import Dict, List, Optional
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
 from models import get_session, Levels, Domain_W, Impact_W, Services, Building, person, pwd_context, create_db_and_tables, reset_and_load_data
@@ -65,6 +65,7 @@ class BuildingInput(BaseModel):
     country: str
     city: str
     year_built: int
+    domains: Optional[List[str]] = []  # Make domains optional and default to empty list
 
     class Config:
         orm_mode = True
@@ -76,10 +77,14 @@ class BuildingOutput(BaseModel):
     country: str
     city: str
     year_built: int
+    domains: List[str]  # Add this line
     owner_id: int
 
     class Config:
         orm_mode = True
+
+class UpdateBuildingDomains(BaseModel):
+    domains: List[str]
 
 
 # Define a Pydantic model for the SRI calculation input
@@ -378,6 +383,7 @@ def add_building(input_data: BuildingInput, request: Request, response: Response
                 country=input_data.country,
                 city=input_data.city,
                 year_built=input_data.year_built,
+                #domains=input_data.domains,  # Add domains to the building creation
                 owner_id=current_user.id
             )
             session.add(building)
@@ -605,6 +611,24 @@ def calculate_sri(user_input: SRIInput):
         "srf_scores": srf_scores,
         "total_sri": total_sri
     }
+
+@app.put("/buildings/{building_id}/domains", response_model=BuildingOutput)
+def update_building_domains(building_id: int, domains_data: UpdateBuildingDomains):
+    with get_session() as session:
+        statement = select(Building).where(Building.id == building_id)
+        results = session.exec(statement)
+        building = results.one_or_none()
+
+        if not building:
+            raise HTTPException(status_code=404, detail="Building not found")
+
+        building.domains = domains_data.domains
+        session.add(building)
+        session.commit()
+        session.refresh(building)
+
+    return building
+
 
 @app.on_event("startup")
 async def startup_event():

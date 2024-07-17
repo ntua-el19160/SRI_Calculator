@@ -29,7 +29,7 @@ const BuildingForm = () => {
         },
       });
       localStorage.setItem('currentBuilding', JSON.stringify(response.data));
-      navigate("/services_applications");
+      navigate("/present_domains");
     } catch (error) {
       console.error("Error submitting form", error);
     }
