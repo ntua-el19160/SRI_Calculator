@@ -19,15 +19,18 @@ const PresentDomains = () => {
 
   const handleSubmit = async () => {
     const building = JSON.parse(localStorage.getItem("currentBuilding"));
-    if (building) {
+    if (building && building.id) {
       const selectedDomainsArray = Object.keys(selectedDomains).filter(domain => selectedDomains[domain]);
 
       try {
         const response = await axios.put(`http://localhost:8000/buildings/${building.id}/domains`, {
           domains: selectedDomainsArray
         });
+
+        // Ensure the response.data includes the ID from building
+        const updatedBuilding = { ...response.data, id: building.id };
         
-        localStorage.setItem('currentBuilding', JSON.stringify(response.data));
+        localStorage.setItem('currentBuilding', JSON.stringify(updatedBuilding));
         navigate('/services_applications');
       } catch (error) {
         console.error('Failed to update building domains', error);

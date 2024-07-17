@@ -1,33 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { Header, Card, Table, Container } from 'semantic-ui-react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const SRIScore = () => {
     const [sriData, setSriData] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [currentBuilding, setCurrentBuilding] = useState(null);
+    const { buildingId } = useParams();
 
     useEffect(() => {
-        const storedSriData = localStorage.getItem('sriData');
-        const storedCurrentUser = localStorage.getItem('currentUser');
-        const storedCurrentBuilding = localStorage.getItem('currentBuilding');
+        const fetchUserInfo = async () => {
+            const token = localStorage.getItem("token");
+            try {
+              const response = await axios.get("http://localhost:8000/profile/", {
+                headers: { Authorization: `Bearer ${token}` },
+              });
+              setCurrentUser(response.data);
+            } catch (error) {
+              console.error("Error fetching current user", error);
+            }
+        };
 
-        if (storedSriData) {
-            setSriData(JSON.parse(storedSriData));
-        }
-        if (storedCurrentUser) {
-            setCurrentUser(JSON.parse(storedCurrentUser));
-        }
-        if (storedCurrentBuilding) {
-            setCurrentBuilding(JSON.parse(storedCurrentBuilding));
-        }
-    }, []);
+        const fetchSriScores = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8000/building/${buildingId}/sri_scores/`);
+                setSriData(response.data);
+            } catch (error) {
+                console.error("Error fetching SRI scores", error);
+            }
+        };
 
-    console.log('Received SRI Data:', sriData);
-    console.log('Received User Data:', currentUser);
-    console.log('Received Building Data:', currentBuilding);
+        const fetchBuildingInfo = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8000/building/${buildingId}/`);
+                setCurrentBuilding(response.data);
+            } catch (error) {
+                console.error("Error fetching building info", error);
+            }
+        };
 
-    if (!sriData) {
-        return <p>No SRI data available.</p>;
+        fetchUserInfo();
+        fetchSriScores();
+        fetchBuildingInfo();
+    }, [buildingId]);
+
+    console.log(sriData);
+    console.log(currentUser);
+    console.log(currentBuilding);
+
+    if (!sriData || !currentUser || !currentBuilding) {
+        return <p>Loading...</p>;
     }
 
     const { 
@@ -112,3 +135,52 @@ const SRIScore = () => {
 
 export default SRIScore;
 
+// import React, { useEffect, useState } from 'react';
+// import { Header, Card, Table, Container } from 'semantic-ui-react';
+
+// const SRIScore = () => {
+//     const [sriData, setSriData] = useState(null);
+//     const [currentUser, setCurrentUser] = useState(null);
+//     const [currentBuilding, setCurrentBuilding] = useState(null);
+
+//     useEffect(() => {
+//         const storedSriData = localStorage.getItem('sriData');
+//         const storedCurrentUser = localStorage.getItem('currentUser');
+//         const storedCurrentBuilding = localStorage.getItem('currentBuilding');
+
+//         if (storedSriData) {
+//             setSriData(JSON.parse(storedSriData));
+//         }
+//         if (storedCurrentUser) {
+//             setCurrentUser(JSON.parse(storedCurrentUser));
+//         }
+//         if (storedCurrentBuilding) {
+//             setCurrentBuilding(JSON.parse(storedCurrentBuilding));
+//         }
+//     }, []);
+
+//     console.log('Received SRI Data:', sriData);
+//     console.log('Received User Data:', currentUser);
+//     console.log('Received Building Data:', currentBuilding);
+
+//     if (!sriData) {
+//         return <p>No SRI data available.</p>;
+//     }
+
+//     const { 
+//         smart_readiness_scores, 
+//         sr_impact_criteria, 
+//         srf_scores, 
+//         total_sri 
+//     } = sriData;
+//     const impactCriteria = [
+//         "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
+//         "Information to occupants", "Maintenance and fault prediction"
+//     ];
+
+//     const domains = [ "Cooling", "Dynamic building envelope", "Domestic hot water", "Electricity", "Electric vehicle charging",
+//     "Heating", "Lighting", "Monitoring and control", "Ventilation"];
+
+//     const getScore = (domain, impactCriterion) => {
+//         return smart_readiness_scores[`${domain}-${impactCriterion}`] || 0;
+//     };

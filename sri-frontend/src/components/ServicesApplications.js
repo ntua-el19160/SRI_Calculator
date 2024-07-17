@@ -150,14 +150,14 @@ const ServicesApplications = () => {
             }
         }
 
-        axios.post('http://localhost:8000/calculate-sri/', sriInput, {
+        axios.post(`http://localhost:8000/calculate-sri/${currentBuilding.id}/`, sriInput, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {
             localStorage.setItem('sriData', JSON.stringify(response.data));
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             localStorage.setItem('currentBuilding', JSON.stringify(currentBuilding));
-            navigate('/sri-score');
+            navigate(`/sri_score/${currentBuilding.id}`);
         })
         .catch(error => {
             console.error('Failed to calculate SRI', error);

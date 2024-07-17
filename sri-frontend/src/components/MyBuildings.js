@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Table, Header, Segment } from "semantic-ui-react";
+import { Container, Table, Header, Segment, Button } from "semantic-ui-react";
 import { useNavigate } from "react-router-dom";
 
 const MyBuildings = () => {
@@ -41,6 +41,10 @@ const MyBuildings = () => {
     fetchUserInfo();
   }, []);
 
+  const handleViewScores = (buildingId) => {
+    navigate(`/sri_score/${buildingId}`);
+  };
+
   return (
     <Container>
       <Header as="h1" textAlign="center">SRI Calculator</Header>
@@ -60,6 +64,7 @@ const MyBuildings = () => {
             <Table.HeaderCell>Country</Table.HeaderCell>
             <Table.HeaderCell>City</Table.HeaderCell>
             <Table.HeaderCell>Year Built</Table.HeaderCell>
+            <Table.HeaderCell>SRI Score</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -71,6 +76,9 @@ const MyBuildings = () => {
               <Table.Cell>{building.country}</Table.Cell>
               <Table.Cell>{building.city}</Table.Cell>
               <Table.Cell>{building.year_built}</Table.Cell>
+              <Table.Cell>
+                <Button onClick={() => handleViewScores(building.id)}>View SRI Scores</Button>
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

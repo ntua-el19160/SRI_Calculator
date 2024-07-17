@@ -1,7 +1,7 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 from sqlmodel import SQLModel, create_engine, Session, select, text
 import pandas as pd
-from sqlmodel import Field, Relationship, Column, ARRAY, String
+from sqlmodel import Field, Relationship, Column, ARRAY, String, JSON
 from passlib.context import CryptContext
 from contextlib import contextmanager
 
@@ -97,6 +97,8 @@ class Building(SQLModel, table=True):
     domains: Optional[List[str]] = Field(sa_column=Column(ARRAY(String)))  # Add this line
     owner_id: Optional[int] = Field(default=None, foreign_key="person.id")
     owner: Optional[person] = Relationship(back_populates="buildings")
+    sri_scores: Optional[Dict[str, float]] = Field(sa_column=Column(JSON), default={})  # Add SRI scores field
+    total_sri: Optional[float] = 0.0  # Add total SRI score field
 
     
 

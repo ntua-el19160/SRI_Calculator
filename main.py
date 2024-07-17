@@ -388,6 +388,7 @@ def add_building(input_data: BuildingInput, request: Request, response: Response
             )
             session.add(building)
             session.commit()
+            session.refresh(building)  # Ensure the building object is refreshed to get the ID
             response.set_cookie(key="current_building", value=building.building_name)
             return building
             #return {"message": "Building added successfully", "building": building}
@@ -543,8 +544,8 @@ def save_sri_levels(sri_levels: SRIInput):
     #return {"message": "SRI levels saved successfully", "sri_json": sri_json}
     
 
-@app.post("/calculate-sri/", response_model=SRIOutput)
-def calculate_sri(user_input: SRIInput):
+@app.post("/calculate-sri/{building_id}/", response_model=SRIOutput)
+def calculate_sri(building_id: int, user_input: SRIInput):
 
     try:
         validate_numeric_data(user_input.lev)  # Validate numeric fields
@@ -600,7 +601,7 @@ def calculate_sri(user_input: SRIInput):
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
 
     # Return all expected results
-    return {
+    sri_result = {
         #"domain_impact_scores": domain_impact_scores,
         #"domain_max_scores": domain_max_scores,
         "smart_readiness_scores": smart_readiness_scores,
@@ -611,9 +612,19 @@ def calculate_sri(user_input: SRIInput):
         "srf_scores": srf_scores,
         "total_sri": total_sri
     }
+    # Save the results to the building
+    with get_session() as session:
+        building = session.get(Building, building_id)
+        if building:
+            building.sri_scores = sri_result
+            building.total_sri = total_sri
+            session.add(building)
+            session.commit()
+    
+    return sri_result
 
 @app.put("/buildings/{building_id}/domains", response_model=BuildingOutput)
-def update_building_domains(building_id: int, domains_data: UpdateBuildingDomains):
+def update_building_domains(building_id: int, response: Response, domains_data: UpdateBuildingDomains):
     with get_session() as session:
         statement = select(Building).where(Building.id == building_id)
         results = session.exec(statement)
@@ -629,6 +640,25 @@ def update_building_domains(building_id: int, domains_data: UpdateBuildingDomain
 
     return building
 
+@app.get("/building/{building_id}/sri_scores/", response_model=SRIOutput)
+def get_sri_scores(building_id: int):
+    with get_session() as session:
+        building = session.get(Building, building_id)
+        if not building or not building.sri_scores:
+            raise HTTPException(status_code=404, detail="SRI scores not found for this building")
+        
+        return building.sri_scores
+
+   
+@app.get("/building/{building_id}/", response_model=BuildingOutput)
+def get_curr_building(building_id: int, response: Response):
+    with get_session() as session:
+        statement = select(Building).where(Building.id == building_id)
+        building = session.exec(statement).first()
+        if not building:
+            raise HTTPException(status_code=404, detail="Building not found")
+    print(building)
+    return building
 
 @app.on_event("startup")
 async def startup_event():

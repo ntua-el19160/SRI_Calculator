@@ -22,7 +22,7 @@ function App() {
                 <Route path="/add_building" element={<BuildingForm />} />
                 <Route path="/present_domains" element={<PresentDomains />} />
                 <Route path="/services_applications" element={<ServicesApplications />} />
-                <Route path="/sri-score" element={<SRIScore />} />
+                <Route path="/sri_score/:buildingId" element={<SRIScore />} />
             </Routes>
         </Router>
     );
