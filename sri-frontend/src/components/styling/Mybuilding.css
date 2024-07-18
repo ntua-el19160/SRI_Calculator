@@ -163,10 +163,11 @@
   }
   
   .building-divider {
-    width: 185%;
+    width: 100%;
     height: 20px;
     background: linear-gradient(to right, black, grey);
-    margin-bottom: 150px;
+    margin-bottom: 80px;
+    margin-right: 20px;
   }
   
   .building-buttons {
@@ -200,7 +201,8 @@
     color: purple;
   }
   
-  .my-buildings {
+  .building-my-buildings {
+    margin-top: 30px;
     border-color: green;
   }
   
@@ -254,3 +256,56 @@
     border: 1px solid black !important;
   }
   
+  /* Form styles */
+
+  .building-form-title {
+    color:rgb(22, 57, 47);
+    text-align: center;
+    margin-right: 145px;
+    font-size: 30px;
+  }
+
+  .building-form-container {
+    margin-right: 50px !important;
+  }
+
+  .building-form {
+    width: 100% !important; /* Adjust width as needed */
+    background: linear-gradient(to bottom, rgb(143, 237, 143), rgb(255, 255, 255)) !important;
+  }
+  
+  .building-form label {
+    display: block !important;
+    text-align: left !important;
+    margin-bottom: 5px !important; /* Adjust spacing between label and input */
+    color: black !important;
+    font-size: 15px !important;
+  }
+  
+  .building-form input{
+    border: 2px solid rgb(143, 237, 143) !important;
+    border-radius: 20px !important;
+    color: rgb(0, 0, 0)!important;
+    padding: 10px !important;
+    margin-bottom: 15px !important; /* Adjust spacing between fields */
+  }
+
+  .building-form select{
+    border: 2px solid rgb(143, 237, 143) !important;
+    border-radius: 20px !important;
+    color: rgb(0, 0, 0)!important;
+    padding: 10px !important;
+    margin-bottom: 15px !important; /* Adjust spacing between fields */
+  }
+
+  .building-form option{
+    border-radius: 20px !important;
+    color: rgb(0, 0, 0)!important;
+    padding: 10px !important;
+    margin-bottom: 15px !important; /* Adjust spacing between fields */
+  }
+
+  
+  .building-form-field:focus {
+    border-color: green !important;
+  }
