@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Table, Header, Segment, Button } from "semantic-ui-react";
+import { Container, Table, Button } from "semantic-ui-react";
 import { useNavigate } from "react-router-dom";
+import { Icon } from "semantic-ui-react";
+import './styling/Mybuilding.css'; // Import the CSS file
 
 const MyBuildings = () => {
   const [buildings, setBuildings] = useState([]);
   const [userInfo, setUserInfo] = useState({});
+  const [showUserInfo, setShowUserInfo] = useState(false); // State to control user info popup
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +29,7 @@ const MyBuildings = () => {
     const fetchUserInfo = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:8000/user_info", {
+        const response = await axios.get("http://localhost:8000/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,48 +48,88 @@ const MyBuildings = () => {
     navigate(`/sri_score/${buildingId}`);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const toggleUserInfo = () => {
+    setShowUserInfo(!showUserInfo);
+  };
+
   return (
-    <Container>
-      <Header as="h1" textAlign="center">SRI Calculator</Header>
-      <Segment textAlign="right">
-        <div>
-          <strong>{userInfo.username}</strong>
-          <br />
-          <span>{userInfo.email}</span>
+    <div className="building-container">
+      {/* Left Side */}
+      <div className="building-left">
+        <div className="logo-title-container">
+          <img src={require('./assets/logo_sri.png')} alt="SRI Logo" className="building-logo" />
+          <div className="building-title-container">
+            <h1 className="building-main-title">SRI TOOLKIT</h1>
+            <p className="building-subtitle">Co-creating Tools and Services for Smart Readiness Indicator</p>
+          </div>
         </div>
-      </Segment>
-      <Table celled>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Building Name</Table.HeaderCell>
-            <Table.HeaderCell>Building Type</Table.HeaderCell>
-            <Table.HeaderCell>Zone</Table.HeaderCell>
-            <Table.HeaderCell>Country</Table.HeaderCell>
-            <Table.HeaderCell>City</Table.HeaderCell>
-            <Table.HeaderCell>Year Built</Table.HeaderCell>
-            <Table.HeaderCell>SRI Score</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {buildings.map((building) => (
-            <Table.Row key={building.id}>
-              <Table.Cell>{building.building_name}</Table.Cell>
-              <Table.Cell>{building.building_type}</Table.Cell>
-              <Table.Cell>{building.zone}</Table.Cell>
-              <Table.Cell>{building.country}</Table.Cell>
-              <Table.Cell>{building.city}</Table.Cell>
-              <Table.Cell>{building.year_built}</Table.Cell>
-              <Table.Cell>
-                <Button onClick={() => handleViewScores(building.id)}>View SRI Scores</Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-      <div style={{ position: "fixed", bottom: 20, right: 20 }}>
-        <button onClick={() => navigate("/profile")}>Profile</button>
+        <div className="sidebar-buttons">
+          <button className="building-button my-account" title="View Profile" onClick={() => navigate('/profile')}>
+            <Icon name="user" size="huge" />
+          </button>
+          <button className="building-button building-add-building" title="Add a new Building" onClick={() => navigate('/add_building')}>
+            <Icon name="plus" size="huge" />
+          </button>
+        </div>
+        <div className="building-vertical-line"></div>
       </div>
-    </Container>
+  
+      {/* Right Side */}
+      <div className="building-right">
+        <div className="building-user-info">
+          <div className="building-username"><span>{userInfo.username}</span></div>
+          <button className="building-user-button" onClick={toggleUserInfo}>
+            <Icon name="user" color="white" />
+          </button>
+          {showUserInfo && (
+            <div className="building-user-details">
+              <p className="building-user-email">{userInfo.email}</p>
+              <button className="building-logout-button" onClick={handleLogout}>
+                Log out
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="building-content">
+          <h1 className="building-welcome-title">My Buildings</h1>
+          <Container>
+            <Table celled className="building-table">
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Building Name</Table.HeaderCell>
+                  <Table.HeaderCell>Building Type</Table.HeaderCell>
+                  <Table.HeaderCell>Zone</Table.HeaderCell>
+                  <Table.HeaderCell>Country</Table.HeaderCell>
+                  <Table.HeaderCell>City</Table.HeaderCell>
+                  <Table.HeaderCell>Year Built</Table.HeaderCell>
+                  <Table.HeaderCell>SRI Score</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {buildings.map((building) => (
+                  <Table.Row key={building.id}>
+                    <Table.Cell>{building.building_name}</Table.Cell>
+                    <Table.Cell>{building.building_type}</Table.Cell>
+                    <Table.Cell>{building.zone}</Table.Cell>
+                    <Table.Cell>{building.country}</Table.Cell>
+                    <Table.Cell>{building.city}</Table.Cell>
+                    <Table.Cell>{building.year_built}</Table.Cell>
+                    <Table.Cell>
+                      <Button className="view-sri-button" onClick={() => handleViewScores(building.id)}>View SRI Scores</Button>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </Container>
+        </div>
+      </div>
+    </div>
   );
 };
 

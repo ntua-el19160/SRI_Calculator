@@ -88,14 +88,22 @@
 
 /* Hover effects */
 .login-button:hover {
+    width: 70%;
     background-color: white !important;
     color: green !important;
-    border: 2px solid green !important; /* Add border to maintain button shape */
+    border-radius: 25px !important;
+    padding: 15px !important;
+    font-size: 24px !important;
+    margin-bottom: 20px !important;
 }
 
 .signup-button:hover {
+    width: 70%;
     background-color: green !important;
     color: white !important;
-    border: 2px solid green !important; /* Add border to maintain button shape */
+    border: 2px solid green !important;
+    border-radius: 25px !important;
+    padding: 15px !important;
+    font-size: 24px !important; /* Add border to maintain button shape */
 }
 

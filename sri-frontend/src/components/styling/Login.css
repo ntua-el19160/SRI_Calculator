@@ -79,7 +79,10 @@
 .login-signup-button:hover {
     background-color: white !important;
     color: green !important;
-    border: 2px solid green !important; /* Add border to maintain button shape */
+    border-radius: 25px !important;
+    padding: 5px 10px !important;
+    font-size: 15px !important;
+    margin-left: 10px !important; /* Add border to maintain button shape */
 }
 
 .login-login-button {
@@ -94,7 +97,11 @@
 }
 
 .login-login-button:hover {
+    width: 50%;
     background-color: green !important;
     color: white !important;
-    border: 2px solid green !important; /* Add border to maintain button shape */
+    border-radius: 25px !important;
+    padding: 15px !important;
+    font-size: 18px !important;
+    margin-top: 20px !important; /* Add border to maintain button shape */
 }

@@ -1,0 +1,256 @@
+.building-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .building-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background: white;
+  }
+  
+  .logo-title-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+  }
+  
+  .building-logo {
+    height: 140px;
+    margin-right: 40px;
+  }
+  
+  .building-title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .building-main-title {
+    font-size: 34px;
+    color: rgb(84, 192, 84);
+    margin: 0;
+  }
+  
+  .building-subtitle {
+    font-size: 24px;
+    color: rgb(84, 192, 84);
+    margin: 0;
+  }
+  
+  .building-vertical-line {
+    width: 10px;
+    height: 100%;
+    background: linear-gradient(to bottom, green, orange);
+    position: absolute;
+    left: 150px; /* Adjust the position based on your layout */
+  }
+  
+  .sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    margin-top: 20px;
+  }
+  
+  .building-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    border: 4px solid transparent;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    margin: 10px 0;
+    margin-top: 200px;
+    margin-left: 30px;
+  }
+  
+  .building-button:hover {
+    opacity: 0.8;
+  }
+  
+  .building-right {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    position: relative; /* Ensure relative positioning for absolute children */
+  }
+  
+  .building-user-info {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  
+  .building-username {
+    font-size: 20px;
+    font-style: italic;
+    margin-right: 10px; /* Add margin to separate username and button */
+  }
+  
+  .building-user-button {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    margin-left: 20px;
+  }
+  
+  .building-user-button:hover {
+    opacity: 0.8;
+  }
+  
+  .building-user-details {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 10;
+    text-align: center;
+    width: 200px; /* Set width for the popup */
+  }
+  
+  .building-user-email {
+    margin-bottom: 10px; /* Add margin to separate email and button */
+  }
+  
+  .building-logout-button {
+    background-color: white;
+    color: green;
+    border: 2px solid green;
+    border-radius: 25px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  
+  .building-logout-button:hover {
+    background-color: green;
+    color: white;
+  }
+  
+  .building-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .building-welcome-title {
+    font-size: 32px;
+    color: green;
+    margin-bottom: 20px;
+    margin-right: 150px;
+  }
+  
+  .building-divider {
+    width: 185%;
+    height: 20px;
+    background: linear-gradient(to right, black, grey);
+    margin-bottom: 150px;
+  }
+  
+  .building-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin-right: 400px;
+  }
+  
+  .building-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .building-button-text {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .green-text {
+    color: green;
+  }
+  
+  .orange-text {
+    color: orange;
+  }
+  
+  .purple-text {
+    color: purple;
+  }
+  
+  .my-buildings {
+    border-color: green;
+  }
+  
+  .my-account {
+    border-color: orange;
+  }
+  
+  .building-add-building {
+    margin-top: 30px;
+    border-color: purple;
+  }
+  
+  /* Table styles */
+  .building-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 20px 0 !important;
+  }
+  
+  .building-table th,
+  .building-table td {
+    border: 1px solid rgb(40, 199, 40) !important;
+    text-align: center !important;
+    padding: 8px !important;
+  }
+  
+  .building-table th {
+    background-color: rgb(40, 199, 40) !important;
+    color: rgb(41, 35, 35) !important;
+  }
+  
+  .building-table td {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  .view-sri-button {
+    background-color: rgb(27, 56, 48) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    cursor: pointer !important;
+    width: 100px !important;
+    height: 50px !important;
+  }
+  
+  .view-sri-button:hover {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+  

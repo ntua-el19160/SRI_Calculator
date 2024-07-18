@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Icon } from 'semantic-ui-react'; // Import Icon from semantic-ui-react
+
+import './styling/Profile.css'; // Import the CSS file
 
 const Profile = () => {
     const [user, setUser] = useState(null);
+    const [showUserInfo, setShowUserInfo] = useState(false); // State to control user info popup
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,23 +35,75 @@ const Profile = () => {
         fetchUser();
     }, [navigate]);
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/'); // Navigate to home page after logout
+    };
+
+    const toggleUserInfo = () => {
+        setShowUserInfo(!showUserInfo);
+    };
+
     if (!user) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div>
-            <h1>SRI Calculator</h1>
-            <div style={{ textAlign: 'right' }}>
-                <h2>{user.username}</h2>
-                <p>{user.email}</p>
+        <div className="profile-container">
+            {/* Left Side */}
+            <div className="profile-left">
+                <div className="logo-title-container">
+                    <img src={require('./assets/logo_sri.png')} alt="SRI Logo" className="profile-logo" />
+                    <div className="profile-title-container">
+                        <h1 className="main-title">SRI TOOLKIT</h1>
+                        <p className="subtitle">Co-creating Tools and Services for Smart Readiness Indicator</p>
+                    </div>
+                </div>
+                <div className="vertical-line"></div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-                <button onClick={() => navigate('/my_buildings')}>My Buildings</button>
-                <button onClick={() => navigate('/add_building')}>New Building</button>
+    
+            {/* Right Side */}
+            <div className="profile-right">
+                <div className="profile-user-info">
+                    <div className="profile-username"><span>{user.username}</span></div>
+                    <button className="profile-user-button" onClick={toggleUserInfo}>
+                        <Icon name="user" color="white" />
+                    </button>
+                    {showUserInfo && (
+                        <div className="profile-user-details">
+                            <p>{user.email}</p>
+                            <button className="profile-logout-button" onClick={handleLogout}>
+                                Log out
+                            </button>
+                        </div>
+                    )}
+                </div>
+                <div className="profile-content">
+                    <h1 className="profile-welcome-title">Welcome to SRI Toolkit!</h1>
+                    <div className="profile-divider"></div>
+                    <div className="profile-buttons">
+                        <div className="profile-button-container">
+                            <button className="profile-button my-buildings" onClick={() => navigate('/my_buildings')}>
+                                <Icon name="building" size="huge" />
+                            </button>
+                            <span className="profile-button-text green-text">My Buildings</span>
+                        </div>
+                        <div className="profile-button-container">
+                            <button className="profile-button my-account" onClick={() => navigate('/profile')}>
+                                <Icon name="user" size="huge" />
+                            </button>
+                            <span className="profile-button-text orange-text">My Account</span>
+                        </div>
+                        <div className="profile-button-container">
+                            <button className="profile-button add-building" onClick={() => navigate('/add_building')}>
+                                <Icon name="plus" size="huge" />
+                            </button>
+                            <span className="profile-button-text purple-text">Add Building</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
 };
-
 export default Profile;

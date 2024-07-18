@@ -1,0 +1,201 @@
+.profile-container {
+    display: flex;
+    height: 100vh;
+}
+
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background: white;
+}
+
+.logo-title-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.profile-logo {
+    height: 140px;
+    margin-right: 0;
+}
+
+.profile-title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-main-title {
+    font-size: 24px;
+    color: palegreen;
+    margin: 0;
+}
+
+.profile-subtitle {
+    font-size: 14px;
+    color: palegreen;
+    margin: 0;
+}
+
+.vertical-line {
+    width: 10px;
+    height: 100%;
+    background: linear-gradient(to bottom, green, orange);
+}
+
+
+
+.profile-right {
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.profile-user-info {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    margin-top: 20px;
+}
+
+.profile-username {
+    font-size: 20px;
+    font-style: italic;
+}
+
+.profile-user-button {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.profile-user-button:hover {
+    opacity: 0.8;
+}
+
+.profile-user-details {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 10;
+    text-align: center;
+}
+
+.profile-logout-button {
+    background-color: white;
+    color: green;
+    border: 2px solid green;
+    border-radius: 25px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.profile-logout-button:hover {
+    background-color: green;
+    color: white;
+}
+
+.profile-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.profile-welcome-title {
+    font-size: 32px;
+    color: green;
+    margin-bottom: 20px;
+    margin-right: 400px;
+}
+
+.profile-divider {
+    width: 185%;
+    height: 20px;
+    background: linear-gradient(to right, black, grey);
+    margin-bottom: 150px;
+}
+
+.profile-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin-right: 400px;
+}
+
+.profile-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    border: 4px solid transparent;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+}
+
+.profile-button:hover {
+    opacity: 0.8;
+}
+
+.profile-button .icon {
+    width: 100%;
+    height: 100%;
+}
+
+.profile-button-text {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.green-text {
+    color: green;
+}
+
+.orange-text {
+    color: orange;
+}
+
+.purple-text {
+    color: purple;
+}
+
+.my-buildings {
+    border-color: green;
+}
+
+.my-account {
+    border-color: orange;
+}
+
+.add-building {
+    border-color: purple;
+}
