@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Button, Form, Container, Header, Message } from 'semantic-ui-react';
+import { Button, Form, Container, Message } from 'semantic-ui-react';
+import './styling/Login.css'; // Import the same CSS file
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -47,51 +48,73 @@ const Signup = () => {
   };
 
   return (
-    <Container>
-      <Header as="h2" textAlign="center">Sign Up</Header>
-      <Form onSubmit={handleSubmit} loading={loading} error={!!error}>
-        <Form.Field>
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </Form.Field>
-        <Form.Field>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </Form.Field>
-        <Form.Field>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </Form.Field>
-        {error && (
-          <Message
-            error
-            header="Signup Failed"
-            content={error}
-          />
-        )}
-        <Button type="submit" primary disabled={loading}>
-          Sign Up
-        </Button>
-      </Form>
-    </Container>
+    <div className="login-container">
+      <div className="login-header">
+        <img src={require('./assets/logo_sri.png')} alt="SRI Logo" className="logo" />
+        <div className="title-container">
+          <h1 className="main-title">SRI TOOLKIT</h1>
+          <p className="subtitle">Co-creating Tools and Services for Smart Readiness Indicator</p>
+        </div>
+      </div>
+      <Container textAlign="center">
+        <h1  className="login-title">Sign Up</h1>
+        <Form onSubmit={handleSubmit} loading={loading} error={!!error} className="login-form">
+          <Form.Field>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Username"
+              className="login-input-field"
+              required
+            />
+          </Form.Field>
+          <Form.Field>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="login-input-field"
+              required
+            />
+          </Form.Field>
+          <Form.Field>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              className="login-input-field"
+              required
+            />
+          </Form.Field>
+          {error && (
+            <Message
+              error
+              header="Signup Failed"
+              content={error}
+            />
+          )}
+          <div className="login-signup-link">
+            <span>If you already have an account : </span>
+            <Button 
+              type="button" 
+              className="login-signup-button" 
+              onClick={() => navigate('/login')}
+            >
+              Log In
+            </Button>
+          </div>
+          <Button type="submit" className="login-login-button" disabled={loading}>
+            Sign Up
+          </Button>
+        </Form>
+      </Container>
+    </div>
   );
 };
 

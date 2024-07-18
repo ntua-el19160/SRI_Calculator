@@ -1,0 +1,101 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background: white; /* Set background to white */
+}
+
+.header {
+    display: flex;
+    align-items: normal;
+    width: 100%;
+    padding: 5px;
+}
+
+.logo {
+    height: 140px;
+    margin-right: 0;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.main-title {
+    font-size: 36px;
+    color: rgb(84, 192, 84);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 24px;
+    color: rgb(84, 192, 84);
+    margin: 0;
+    margin-right: 10px;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: linear-gradient(to bottom, #989191, #f0f0f0); /* Grey gradient background */
+    border-radius: 15px;
+    padding: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.welcome-title {
+    font-size: 40px;
+    color: green;
+    margin-bottom: 10px;
+    text-align: center; /* Center text */
+}
+
+.welcome-subtitle {
+    font-size: 30px;
+    color: rgb(8, 70, 8);
+    margin-bottom: 30px;
+    text-align: center; /* Center text */
+}
+
+.login-button {
+    width: 70%;
+    background-color: green !important;
+    color: white !important;
+    border-radius: 25px !important;
+    padding: 15px !important;
+    font-size: 24px !important;
+    margin-bottom: 20px !important;
+    transition: background-color 0.2s, color 0.2s; /* Smooth transition */
+}
+
+.signup-button {
+    width: 70%;
+    background-color: white !important;
+    color: green !important;
+    border: 2px solid green !important;
+    border-radius: 25px !important;
+    padding: 15px !important;
+    font-size: 24px !important;
+    transition: background-color 0.2s, color 0.2s; /* Smooth transition */
+}
+
+/* Hover effects */
+.login-button:hover {
+    background-color: white !important;
+    color: green !important;
+    border: 2px solid green !important; /* Add border to maintain button shape */
+}
+
+.signup-button:hover {
+    background-color: green !important;
+    color: white !important;
+    border: 2px solid green !important; /* Add border to maintain button shape */
+}
+
