@@ -161,6 +161,13 @@
     margin-bottom: 20px;
     margin-right: 150px;
   }
+
+  .building-welcome-subtitle {
+    font-size: 20px;
+    color: green;
+    margin-bottom: 20px;
+    margin-right: 150px;
+  }
   
   .building-divider {
     width: 100%;
@@ -309,3 +316,51 @@
   .building-form-field:focus {
     border-color: green !important;
   }
+
+  /*domain styles */
+
+  .domain-view-sri-button {
+    background-color: rgb(27, 56, 48) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    cursor: pointer !important;
+    width: 150px !important;
+    height: 50px !important;
+    margin-left: 530px !important;
+  }
+  
+  .domain-view-sri-button:hover {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+
+  .domain-grid {
+    background-color: lightgreen !important;
+    border: 1px solid white !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    color: black !important;
+    padding: 10px !important;
+    border-radius: 10px;
+  }
+  
+  .domain-button {
+    border: 2px solid black !important;
+    border-radius: 50% !important;
+    padding: 10px 20px;
+    color: white !important;
+    background-color: black !important;
+  }
+  
+  .domain-button.green {
+    background-color: green !important;
+  }
+  
+  .domain-button.red {
+    background-color: red !important;
+  }
+  
