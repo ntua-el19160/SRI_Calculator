@@ -364,3 +364,98 @@
     background-color: red !important;
   }
   
+  /* service-styles */
+  .service-title {
+    position: absolute;
+    font-size: 32px;
+    color: green;
+    margin-bottom: 700px;
+    margin-right: 150px;
+  }
+
+  .service-menu {
+    border: 1px solid black !important;
+    border-radius: 15px !important;
+    background-color: rgb(236, 236, 236) !important;
+  }
+  
+  .service-menu-item {
+    display: flexbox !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 15px !important;
+    color: black !important;
+    font-weight: bold !important;
+    border-bottom: 1px solid white !important;
+    cursor: pointer !important;
+  }
+  
+  .service-menu-item.active {
+    background-color: rgb(72, 255, 72) !important;
+    text-align: center !important;
+  }
+  
+  .service-menu-icon {
+    margin-right: 10px !important;
+  }
+
+  .services-form {
+    border: 1px solid #ccc !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    max-height: 500px !important;
+    width: 800px !important;
+    overflow-y: auto !important;
+    position: relative !important;
+}
+
+.service-container {
+    border: 1px solid black !important;
+    margin-bottom: 10px !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+}
+
+.service-header {
+    display: flex !important;
+    justify-content: space-between !important;
+}
+
+.service-description {
+    font-weight: bold !important;
+}
+
+.service-checkbox .ui.toggle.checkbox input:checked~.box:before,
+.service-checkbox .ui.toggle.checkbox input:checked~label:before {
+    background-color: green !important;
+}
+
+.levels-form {
+    background-color: rgb(236, 236, 236) !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    margin-top: 10px !important;
+}
+
+.level-checkbox .ui.checkbox input:checked~.box:before,
+.level-checkbox .ui.checkbox input:checked~label:before {
+    background-color: green !important;
+}
+
+.service-view-sri-button {
+    background-color: rgb(27, 56, 48) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    cursor: pointer !important;
+    width: 100px !important;
+    height: 50px !important;
+    margin-top: 20px !important;
+  }
+  
+  .service-view-sri-button:hover {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
