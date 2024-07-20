@@ -533,6 +533,8 @@
     justify-content: space-around !important;
     align-items: flex-start !important;
     margin-top: 20px !important;
+    border: 5px solid rgb(77, 153, 77) !important;
+    margin-bottom: 60px !important;
 }
 
 .scores-charts-container {
@@ -551,7 +553,7 @@
 
 .chart-space {
     flex: 2 !important;
-    border: 2px dashed gray !important;
+    border: 2px solid gray !important;
     height: 300px !important;
 }
 
@@ -569,4 +571,34 @@
 
 .small-table .bold-text {
     font-weight: bold !important;
+}
+
+.sri-building-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  border: 4px solid transparent;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  width: 90px;
+  height: 90px;
+}
+
+.sri-building-button:hover {
+  opacity: 0.8;
+}
+
+.sri-my-account {
+  border-color: orange;
+}
+
+.sri-my-buildings {
+  border-color: green;
+}
+
+.sri-add-building {
+  border-color: purple;
 }

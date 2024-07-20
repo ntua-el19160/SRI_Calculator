@@ -3,8 +3,8 @@ import { Header, Card, Table, Container, Button, Icon } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-//import Highcharts from 'highcharts';
-//import HighchartsReact from 'highcharts-react-official';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 import './styling/Mybuilding.css'; // Import the CSS file
 import './styling/Home.css'; // Import the CSS file
 
@@ -86,69 +86,87 @@ const SRIScore = () => {
         navigate("/");
     };
 
-    // // Prepare data for Domain Scores chart
-    // const domainScoresData = domains.map(domain => ({
-    //     name: domain,
-    //     y: sr_domains[domain] || 0,
-    // }));
+    // Prepare data for Domain Scores chart
+    const domainScoresData = domains.map(domain => ({
+        name: domain,
+        y: sr_domains[domain] || 0,
+    }));
 
-    // // Prepare data for Impact Criteria Scores chart
-    // const impactCriteriaData = Object.entries(sr_impact_criteria).map(([key, value]) => ({
-    //     name: key,
-    //     y: value,
-    // }));
+    // Prepare data for Impact Criteria Scores chart
+    const impactCriteriaData = Object.entries(sr_impact_criteria).map(([key, value]) => ({
+        name: key,
+        y: value,
+    }));
 
-    // // Domain Scores chart options
-    // const domainScoresOptions = {
-    //     chart: {
-    //         type: 'column'
-    //     },
-    //     title: {
-    //         text: 'Domain Scores'
-    //     },
-    //     xAxis: {
-    //         categories: domains,
-    //         title: {
-    //             text: 'Domains'
-    //         }
-    //     },
-    //     yAxis: {
-    //         min: 0,
-    //         title: {
-    //             text: 'Score (%)'
-    //         }
-    //     },
-    //     series: [{
-    //         name: 'Score',
-    //         data: domainScoresData
-    //     }]
-    // };
+    // Domain Scores chart options
+    const domainScoresOptions = {
+        chart: { backgroundColor: {
+            linearGradient: [0, 0, 500, 500],
+            stops: [
+                [0, 'rgb(255, 255, 255)'],
+                [1, 'rgb(240, 240, 255)']
+            ]
+        },
+        plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+        plotShadow: true,
+        type: 'column'
+        },
+        title: {
+            text: 'Domain Scores'
+        },
+        xAxis: {
+            categories: domains,
+            title: {
+                text: 'Domains'
+            }
+        },
+        yAxis: {
+            min: 0,
+            max: 100,
+            title: {
+                text: 'Score (%)'
+            }
+        },
+        series: [{
+            name: 'Domain Scores (%)',
+            data: domainScoresData
+        }]
+    };
 
-    // // Impact Criteria Scores chart options
-    // const impactCriteriaOptions = {
-    //     chart: {
-    //         type: 'column'
-    //     },
-    //     title: {
-    //         text: 'Impact Criteria Scores'
-    //     },
-    //     xAxis: {
-    //         categories: Object.keys(sr_impact_criteria),
-    //         title: {
-    //             text: 'Impact Criteria'
-    //         }
-    //     },
-    //     yAxis: {
-    //         min: 0,
-    //         title: {
-    //             text: 'Score (%)'
-    //         }
-    //     },
-    //     series: [{
-    //         name: 'Score',
-    //         data: impactCriteriaData
-    //     }]
-    // }
+    // Impact Criteria Scores chart options
+    const impactCriteriaOptions = {
+        chart: { backgroundColor: {
+            linearGradient: [0, 0, 500, 500],
+            stops: [
+                [0, 'rgb(255, 255, 255)'],
+                [1, 'rgb(240, 240, 255)']
+            ]
+        },
+        plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+        plotShadow: true,
+        type: 'column'
+        },
+        title: {
+            text: 'Impact Criteria Scores'
+        },
+        xAxis: {
+            categories: Object.keys(sr_impact_criteria),
+            title: {
+                text: 'Impact Criteria'
+            }
+        },
+        yAxis: {
+            min: 0,
+            max: 100,
+            title: {
+                text: 'Score (%)'
+            }
+        },
+        series: [{
+            name: 'Impact Scores (%)',
+            data: impactCriteriaData
+        }]
+    }
 
 
     return (
@@ -158,9 +176,18 @@ const SRIScore = () => {
                 <img src={require('./assets/logo_sri.png')} alt="SRI Logo" className="logo" />
                     <div>
                         <h1 className="main-title">SRI-TOOLKIT</h1>
-                        <h2 className="subtitle">Co-creating Tools and Services for Smart Readiness Indicator</h2>
+                        <h2 className="building-subtitle">Co-creating Tools and Services for Smart Readiness Indicator</h2>
                     </div>
                 </div>
+                <button className="sri-building-button sri-my-account" title="View Profile" onClick={() => navigate('/profile')}>
+                    <Icon name="user" size="huge" />
+                </button>
+                <button className="sri-building-button sri-my-buildings" title="View your Buildings" onClick={() => navigate('/my_buildings')}>
+                    <Icon name="building" size="huge" />
+                </button>
+                <button className="sri-building-button sri-add-building" title="Add a new Building" onClick={() => navigate('/add_building')}>
+                    <Icon name="plus" size="huge" />
+                </button>
                 <Button icon onClick={handleLogout} title="Log out" className="logout-button">
                     <Icon name='log out' />
                 </Button>
@@ -212,7 +239,7 @@ const SRIScore = () => {
                 </Table.Body>
             </Table>
 
-            <div className="horizontal-container">
+            <Container className='horizontal-container'>
                 <Container className="scores-charts-container">
                     <div className="scores-table">
                         <h4 textAlign='center'>Domain Scores</h4>
@@ -227,13 +254,13 @@ const SRIScore = () => {
                             </Table.Body>
                         </Table>
                     </div>
-                    <div>
-                        {/*<HighchartsReact highcharts={Highcharts.cha} options={domainScoresOptions} />*/}
+                    <div className='chart-space'>
+                        <HighchartsReact highcharts={Highcharts} options={domainScoresOptions} />
                     </div>
                 </Container>
-            </div> 
+            </Container> 
 
-            <div className="horizontal-container">
+            <Container className='horizontal-container'>
                 <Container className="scores-charts-container">
                     <div className="scores-table">
                     <h4 textAlign='center'>Impact Criteria Scores</h4>
@@ -248,11 +275,11 @@ const SRIScore = () => {
                             </Table.Body>
                         </Table>
                     </div>
-                    <div>
-                        {/*<HighchartsReact highcharts={Highcharts} options={impactCriteriaOptions} />*/}
+                    <div className='chart-space'>
+                        <HighchartsReact highcharts={Highcharts} options={impactCriteriaOptions} />
                     </div>
                 </Container>
-            </div>
+            </Container>
 
             <Container className="srf-scores-container">
                 <Header as='h4' textAlign='center'>Key Functionality Scores</Header>
