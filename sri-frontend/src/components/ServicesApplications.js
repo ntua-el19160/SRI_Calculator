@@ -166,6 +166,7 @@ const ServicesApplications = () => {
         const sriInput = {
             building_type: currentBuilding.building_type,
             zone: currentBuilding.zone,
+            dom: currentBuilding.domains,
             lev: {}
         };
 

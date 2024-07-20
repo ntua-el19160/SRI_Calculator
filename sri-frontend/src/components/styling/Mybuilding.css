@@ -459,3 +459,114 @@
     color: black !important;
     border: 1px solid black !important;
   }
+
+  /* sriscore styles*/
+
+  .sri-score-page {
+    padding: 20px !important;
+    text-align: center !important;
+}
+
+.header-section {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+}
+
+.logo-title {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.logout-button {
+    background-color: transparent !important;
+    border: none !important;
+    font-size: 1.5rem !important;
+    cursor: pointer !important;
+}
+
+.info-cards {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+}
+
+.info-card {
+    background-color: rgb(240, 240, 240) !important;
+    flex: 1 !important;
+    margin: 10px 20px !important;
+    height: 180px !important;
+    align-items: center !important;
+    font-size: 16px !important;
+}
+
+.total-sri-score {
+    font-size: 30px !important;
+    font-weight: bold !important;
+    color: rgb(5, 170, 5) !important;
+}
+
+.detailed-scores-title {
+    margin-top: 40px !important;
+    text-align: center !important;
+    font-size: 28px !important;
+}
+
+.detailed-scores-table {
+    margin: auto !important;
+    width: 80% !important;
+    text-align: center !important;
+    background: linear-gradient(to bottom, rgb(205, 255, 152), white) !important;
+    border: 1px solid black !important;
+    margin-bottom: 160px !important;
+}
+
+.bold-text {
+    font-weight: bold !important;
+    background-color: white !important;
+}
+
+.horizontal-container {
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: flex-start !important;
+    margin-top: 20px !important;
+}
+
+.scores-charts-container {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    margin: 0 10px !important;
+}
+
+.scores-table {
+    margin-bottom: 20px !important;
+    border: 2px solid green !important;
+    background: linear-gradient(to bottom, lightgray, white) !important;
+    padding: 10px !important;
+}
+
+.chart-space {
+    flex: 2 !important;
+    border: 2px dashed gray !important;
+    height: 300px !important;
+}
+
+.srf-scores-container {
+    margin-top: 20px !important;
+    border: 2px solid green !important;
+    background: linear-gradient(to bottom, lightgray, white) !important;
+    padding: 10px !important;
+}
+
+.small-table {
+    margin: auto !important;
+    width: 100% !important;
+}
+
+.small-table .bold-text {
+    font-weight: bold !important;
+}

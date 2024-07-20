@@ -91,6 +91,7 @@ class UpdateBuildingDomains(BaseModel):
 class SRIInput(BaseModel):
     building_type: str
     zone: str
+    dom: List[str] #list with the present domains
     lev: Dict[str, int]  # Dictionary with service code and level as integer
 
 
@@ -102,7 +103,7 @@ class SRIOutput(BaseModel):
     #weighted_impact_sums: Dict[str, float]  # Weighted sums for each impact criterion (not necessary)
     #weighted_max_sums: Dict[str, float]  # Weighted sums for each impact criterion using lmax(d, ic) (not necessary)
     sr_impact_criteria: Dict[str, float]  # New percentage score for each impact criterion
-    #sr_domains: Dict[str, float]  # Smart Readiness score for each domain
+    sr_domains: Dict[str, float]  # Smart Readiness score for each domain
     srf_scores: Dict[str, float] # Percentage for the SRf score for 3 key functionalities
     total_sri: float  # New field for the total SRI score
 
@@ -124,18 +125,9 @@ def calculate_scores(user_input: SRIInput):
         domain_max_scores = {}  # To store Imax(d, ic)
         smart_readiness_scores = {} #to store SR(d, ic) percentage
 
-        #domains = [
-         #   "Heating", "Domestic hot water", "Cooling", "Ventilation", "Lighting",
-          #  "Electricity", "Dynamic building envelope", "Electric vehicle charging", "Monitoring and control"
-        #]
-        domains = [ "Cooling", "Dynamic building envelope", "Domestic hot water", "Electricity", "Electric vehicle charging",
-                   "Heating", "Lighting", "Monitoring and control", "Ventilation"
-        ]
+        #domains = [ "Cooling", "Dynamic building envelope", "Domestic hot water", "Electricity", "Electric vehicle charging", "Heating", "Lighting", "Monitoring and control", "Ventilation"]
 
-        #impact_criteria = [
-         #   "Energy efficiency", "Maintenance and fault prediction", "Comfort", "Convenience",
-          #  "Health, wellbeing and accessibility", "Information to occupants", "Energy, flexibility and storage"
-        #]
+        domains = user_input.dom
 
         impact_criteria = [
             "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
@@ -608,7 +600,7 @@ def calculate_sri(building_id: int, user_input: SRIInput):
         #"weighted_impact_sums": weighted_sums,
         #"weighted_max_sums": weighted_max_sums,
         "sr_impact_criteria": sr_impact_criteria,  
-        #"sr_domains": sr_domains,
+        "sr_domains": sr_domains,
         "srf_scores": srf_scores,
         "total_sri": total_sri
     }

@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Header, Card, Table, Container } from 'semantic-ui-react';
+import { Header, Card, Table, Container, Button, Icon } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+//import Highcharts from 'highcharts';
+//import HighchartsReact from 'highcharts-react-official';
+import './styling/Mybuilding.css'; // Import the CSS file
+import './styling/Home.css'; // Import the CSS file
+
+
 
 const SRIScore = () => {
     const [sriData, setSriData] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [currentBuilding, setCurrentBuilding] = useState(null);
     const { buildingId } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -56,9 +64,11 @@ const SRIScore = () => {
     const { 
         smart_readiness_scores, 
         sr_impact_criteria, 
+        sr_domains,
         srf_scores, 
         total_sri 
     } = sriData;
+
     const impactCriteria = [
         "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
         "Information to occupants", "Maintenance and fault prediction"
@@ -71,43 +81,129 @@ const SRIScore = () => {
         return smart_readiness_scores[`${domain}-${impactCriterion}`] || 0;
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/");
+    };
+
+    // // Prepare data for Domain Scores chart
+    // const domainScoresData = domains.map(domain => ({
+    //     name: domain,
+    //     y: sr_domains[domain] || 0,
+    // }));
+
+    // // Prepare data for Impact Criteria Scores chart
+    // const impactCriteriaData = Object.entries(sr_impact_criteria).map(([key, value]) => ({
+    //     name: key,
+    //     y: value,
+    // }));
+
+    // // Domain Scores chart options
+    // const domainScoresOptions = {
+    //     chart: {
+    //         type: 'column'
+    //     },
+    //     title: {
+    //         text: 'Domain Scores'
+    //     },
+    //     xAxis: {
+    //         categories: domains,
+    //         title: {
+    //             text: 'Domains'
+    //         }
+    //     },
+    //     yAxis: {
+    //         min: 0,
+    //         title: {
+    //             text: 'Score (%)'
+    //         }
+    //     },
+    //     series: [{
+    //         name: 'Score',
+    //         data: domainScoresData
+    //     }]
+    // };
+
+    // // Impact Criteria Scores chart options
+    // const impactCriteriaOptions = {
+    //     chart: {
+    //         type: 'column'
+    //     },
+    //     title: {
+    //         text: 'Impact Criteria Scores'
+    //     },
+    //     xAxis: {
+    //         categories: Object.keys(sr_impact_criteria),
+    //         title: {
+    //             text: 'Impact Criteria'
+    //         }
+    //     },
+    //     yAxis: {
+    //         min: 0,
+    //         title: {
+    //             text: 'Score (%)'
+    //         }
+    //     },
+    //     series: [{
+    //         name: 'Score',
+    //         data: impactCriteriaData
+    //     }]
+    // }
+
+
     return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-            <Header as='h2' textAlign='center'>SRI Score</Header>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-                <Card>
+        <div className="sri-score-page">
+            <div className="header-section">
+                <div className="logo-title">
+                <img src={require('./assets/logo_sri.png')} alt="SRI Logo" className="logo" />
+                    <div>
+                        <h1 className="main-title">SRI-TOOLKIT</h1>
+                        <h2 className="subtitle">Co-creating Tools and Services for Smart Readiness Indicator</h2>
+                    </div>
+                </div>
+                <Button icon onClick={handleLogout} title="Log out" className="logout-button">
+                    <Icon name='log out' />
+                </Button>
+            </div>
+
+            <div className="info-cards">
+                <Card className="info-card">
                     <Card.Content>
-                        <Card.Header>User Information</Card.Header>
-                        <Card.Meta>Username: {currentUser.username}</Card.Meta>
-                        <Card.Meta>Email: {currentUser.email}</Card.Meta>
+                        <Card.Header style={{ color: 'green' }}>User Information</Card.Header>
+                        <Card.Meta style={{ color: 'black' }}>Username: {currentUser.username}</Card.Meta>
+                        <Card.Meta style={{ color: 'black' }}>Email: {currentUser.email}</Card.Meta>
                     </Card.Content>
                 </Card>
-                <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+                <div className="total-sri-score">
                     Total SRI Score: {total_sri}%
                 </div>
-                <Card>
+                <Card className="info-card">
                     <Card.Content>
-                        <Card.Header>Building Information</Card.Header>
-                        <Card.Meta>Building Name: {currentBuilding.building_name}</Card.Meta>
-                        <Card.Meta>Building Type: {currentBuilding.building_type}</Card.Meta>
-                        <Card.Meta>Zone: {currentBuilding.zone}</Card.Meta>
+                        <Card.Header style={{ color: 'green' }}>Building Information</Card.Header>
+                        <Card.Meta style={{ color: 'black' }}>Building Name: {currentBuilding.building_name}</Card.Meta>
+                        <Card.Meta style={{ color: 'black' }}>Building Type: {currentBuilding.building_type}</Card.Meta>
+                        <Card.Meta style={{ color: 'black' }}>Zone: {currentBuilding.zone}</Card.Meta>
+                        <Card.Meta style={{ color: 'black' }}>Country: {currentBuilding.country}</Card.Meta>
+                        <Card.Meta style={{ color: 'black' }}>City: {currentBuilding.city}</Card.Meta>
+                        <Card.Meta style={{ color: 'black' }}>Year: {currentBuilding.year_built}</Card.Meta>
                     </Card.Content>
                 </Card>
             </div>
-            <Header as='h3' style={{ marginTop: '40px' }}>Detailed Scores</Header>
-            <Table celled>
+
+            <h3 className="detailed-scores-title">Detailed Scores</h3>
+            <Table celled className="detailed-scores-table">
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>Impact Criteria \ Domains</Table.HeaderCell>
+                        <Table.HeaderCell className="bold-text">Domains\Impact Criteria</Table.HeaderCell>
                         {impactCriteria.map(ic => (
-                            <Table.HeaderCell key={ic}>{ic}</Table.HeaderCell>
+                            <Table.HeaderCell key={ic} className="bold-text">{ic}</Table.HeaderCell>
                         ))}
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                     {domains.map(domain => (
                         <Table.Row key={domain}>
-                            <Table.Cell>{domain}</Table.Cell>
+                            <Table.Cell className="bold-text">{domain}</Table.Cell>
                             {impactCriteria.map(ic => (
                                 <Table.Cell key={`${domain}-${ic}`}>{getScore(domain, ic)}%</Table.Cell>
                             ))}
@@ -115,19 +211,61 @@ const SRIScore = () => {
                     ))}
                 </Table.Body>
             </Table>
-            <Container style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
-                <div style={{ border: '1px solid black', padding: '10px' }}>
-                    <Header as='h4'>Impact Criteria Scores</Header>
-                    {Object.entries(sr_impact_criteria).map(([key, value]) => (
-                        <p key={key}>{key}: {value}%</p>
-                    ))}
-                </div>
-                <div style={{ border: '1px solid black', padding: '10px' }}>
-                    <Header as='h4'>Key Functionality Scores</Header>
-                    {Object.entries(srf_scores).map(([key, value]) => (
-                        <p key={key}>{key}: {value}%</p>
-                    ))}
-                </div>
+
+            <div className="horizontal-container">
+                <Container className="scores-charts-container">
+                    <div className="scores-table">
+                        <h4 textAlign='center'>Domain Scores</h4>
+                        <Table celled className="small-table">
+                            <Table.Body>
+                                {domains.map(domain => (
+                                    <Table.Row key={domain}>
+                                        <Table.Cell className="bold-text">{domain}</Table.Cell>
+                                        <Table.Cell>{sr_domains[domain] || 0}%</Table.Cell>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table>
+                    </div>
+                    <div>
+                        {/*<HighchartsReact highcharts={Highcharts.cha} options={domainScoresOptions} />*/}
+                    </div>
+                </Container>
+            </div> 
+
+            <div className="horizontal-container">
+                <Container className="scores-charts-container">
+                    <div className="scores-table">
+                    <h4 textAlign='center'>Impact Criteria Scores</h4>
+                        <Table celled className="small-table">
+                            <Table.Body>
+                                {Object.entries(sr_impact_criteria).map(([key, value]) => (
+                                    <Table.Row key={key}>
+                                        <Table.Cell className="bold-text">{key}</Table.Cell>
+                                        <Table.Cell>{value}%</Table.Cell>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table>
+                    </div>
+                    <div>
+                        {/*<HighchartsReact highcharts={Highcharts} options={impactCriteriaOptions} />*/}
+                    </div>
+                </Container>
+            </div>
+
+            <Container className="srf-scores-container">
+                <Header as='h4' textAlign='center'>Key Functionality Scores</Header>
+                <Table celled className="small-table">
+                    <Table.Body>
+                        {Object.entries(srf_scores).map(([key, value]) => (
+                            <Table.Row key={key}>
+                                <Table.Cell className="bold-text">{key}</Table.Cell>
+                                <Table.Cell>{value}%</Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table>
             </Container>
         </div>
     );
@@ -135,52 +273,72 @@ const SRIScore = () => {
 
 export default SRIScore;
 
-// import React, { useEffect, useState } from 'react';
-// import { Header, Card, Table, Container } from 'semantic-ui-react';
+//     return (
+//         <div style={{ padding: '20px', textAlign: 'center' }}>
+//             <Header as='h2' textAlign='center'>SRI Score</Header>
+//             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+//                 <Card>
+//                     <Card.Content>
+//                         <Card.Header>User Information</Card.Header>
+//                         <Card.Meta>Username: {currentUser.username}</Card.Meta>
+//                         <Card.Meta>Email: {currentUser.email}</Card.Meta>
+//                     </Card.Content>
+//                 </Card>
+//                 <div style={{ fontSize: '24px', fontWeight: 'bold' }}>
+//                     Total SRI Score: {total_sri}%
+//                 </div>
+//                 <Card>
+//                     <Card.Content>
+//                         <Card.Header>Building Information</Card.Header>
+//                         <Card.Meta>Building Name: {currentBuilding.building_name}</Card.Meta>
+//                         <Card.Meta>Building Type: {currentBuilding.building_type}</Card.Meta>
+//                         <Card.Meta>Zone: {currentBuilding.zone}</Card.Meta>
+//                     </Card.Content>
+//                 </Card>
+//             </div>
+//             <Header as='h3' style={{ marginTop: '40px' }}>Detailed Scores</Header>
+//             <Table celled>
+//                 <Table.Header>
+//                     <Table.Row>
+//                         <Table.HeaderCell>Domains \ Impact Criteria</Table.HeaderCell>
+//                         {impactCriteria.map(ic => (
+//                             <Table.HeaderCell key={ic}>{ic}</Table.HeaderCell>
+//                         ))}
+//                     </Table.Row>
+//                 </Table.Header>
+//                 <Table.Body>
+//                     {domains.map(domain => (
+//                         <Table.Row key={domain}>
+//                             <Table.Cell>{domain}</Table.Cell>
+//                             {impactCriteria.map(ic => (
+//                                 <Table.Cell key={`${domain}-${ic}`}>{getScore(domain, ic)}%</Table.Cell>
+//                             ))}
+//                         </Table.Row>
+//                     ))}
+//                 </Table.Body>
+//             </Table>
+//             <Container style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+//                 <div style={{ border: '1px solid black', padding: '10px' }}>
+//                     <Header as='h4'>Impact Criteria Scores</Header>
+//                     {Object.entries(sr_impact_criteria).map(([key, value]) => (
+//                         <p key={key}>{key}: {value}%</p>
+//                     ))}
+//                 </div>
+//                 <div style={{ border: '1px solid black', padding: '10px' }}>
+//                     <Header as='h4'>Domain Scores</Header>
+//                     {Object.entries(sr_domains).map(([key, value]) => (
+//                         <p key={key}>{key}: {value}%</p>
+//                     ))}
+//                 </div>
+//                 <div style={{ border: '1px solid black', padding: '10px' }}>
+//                     <Header as='h4'>Key Functionality Scores</Header>
+//                     {Object.entries(srf_scores).map(([key, value]) => (
+//                         <p key={key}>{key}: {value}%</p>
+//                     ))}
+//                 </div>
+//             </Container>
+//         </div>
+//     );
+// };
 
-// const SRIScore = () => {
-//     const [sriData, setSriData] = useState(null);
-//     const [currentUser, setCurrentUser] = useState(null);
-//     const [currentBuilding, setCurrentBuilding] = useState(null);
-
-//     useEffect(() => {
-//         const storedSriData = localStorage.getItem('sriData');
-//         const storedCurrentUser = localStorage.getItem('currentUser');
-//         const storedCurrentBuilding = localStorage.getItem('currentBuilding');
-
-//         if (storedSriData) {
-//             setSriData(JSON.parse(storedSriData));
-//         }
-//         if (storedCurrentUser) {
-//             setCurrentUser(JSON.parse(storedCurrentUser));
-//         }
-//         if (storedCurrentBuilding) {
-//             setCurrentBuilding(JSON.parse(storedCurrentBuilding));
-//         }
-//     }, []);
-
-//     console.log('Received SRI Data:', sriData);
-//     console.log('Received User Data:', currentUser);
-//     console.log('Received Building Data:', currentBuilding);
-
-//     if (!sriData) {
-//         return <p>No SRI data available.</p>;
-//     }
-
-//     const { 
-//         smart_readiness_scores, 
-//         sr_impact_criteria, 
-//         srf_scores, 
-//         total_sri 
-//     } = sriData;
-//     const impactCriteria = [
-//         "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
-//         "Information to occupants", "Maintenance and fault prediction"
-//     ];
-
-//     const domains = [ "Cooling", "Dynamic building envelope", "Domestic hot water", "Electricity", "Electric vehicle charging",
-//     "Heating", "Lighting", "Monitoring and control", "Ventilation"];
-
-//     const getScore = (domain, impactCriterion) => {
-//         return smart_readiness_scores[`${domain}-${impactCriterion}`] || 0;
-//     };
+// export default SRIScore;
