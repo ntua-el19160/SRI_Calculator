@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Button, Checkbox, Form } from 'semantic-ui-react';
+import { Menu, Button, Checkbox, Form, Dropdown, Input } from 'semantic-ui-react';
 import { Icon } from "semantic-ui-react";
 
 import './styling/Mybuilding.css'; // Import the CSS file
@@ -107,7 +107,7 @@ const ServicesApplications = () => {
     const handleServiceToggle = async (service) => {
         setDomainSelections(prev => {
             const currentDomainSelections = prev[activeDomain] || {};
-            const currentServiceSelection = currentDomainSelections[service.service_desc] || { active: false, levels: [], level: null };
+            const currentServiceSelection = currentDomainSelections[service.service_desc] || { active: false, levels: [], level: null, secondaryLevel: null, percentage: '' };
             const updatedServiceSelection = {
                 ...currentServiceSelection,
                 active: !currentServiceSelection.active
@@ -148,7 +148,46 @@ const ServicesApplications = () => {
                     ...currentDomainSelections,
                     [service.service_desc]: {
                         ...currentDomainSelections[service.service_desc],
-                        level
+                        level,
+                        secondaryLevel: null, // Reset secondary level when primary level changes
+                        percentage: '' // Reset percentage when primary level changes
+                    }
+                }
+            };
+        });
+    };
+
+    const handleSecondaryLevelChange = (service, secondaryLevel) => {
+        setDomainSelections(prev => {
+            const currentDomainSelections = prev[activeDomain] || {};
+            return {
+                ...prev,
+                [activeDomain]: {
+                    ...currentDomainSelections,
+                    [service.service_desc]: {
+                        ...currentDomainSelections[service.service_desc],
+                        secondaryLevel,
+                        percentage: '' // Reset percentage when secondary level changes
+                    }
+                }
+            };
+        });
+    };
+
+    const handlePercentageChange = (service, percentage) => {
+        // Ensure percentage is not greater than 99
+        if (percentage > 99) {
+            percentage = 99;
+        }
+        setDomainSelections(prev => {
+            const currentDomainSelections = prev[activeDomain] || {};
+            return {
+                ...prev,
+                [activeDomain]: {
+                    ...currentDomainSelections,
+                    [service.service_desc]: {
+                        ...currentDomainSelections[service.service_desc],
+                        percentage
                     }
                 }
             };
@@ -176,11 +215,24 @@ const ServicesApplications = () => {
                 if (selection.active && selection.level) {
                     const service = Object.values(servicesByDomain).flat().find(s => s.service_desc === serviceDesc);
                     if (service) {
-                        sriInput.lev[service.code] = selection.level.intLevel;
+                        if (selection.secondaryLevel && selection.percentage) {
+                            // If both primary and secondary levels are chosen
+                            sriInput.lev[service.code] = {
+                                [selection.level.intLevel]: parseInt(selection.percentage, 10),
+                                [selection.secondaryLevel.intLevel]: 100 - parseInt(selection.percentage, 10)
+                            };
+                        } else {
+                            // If only the primary level is chosen
+                            sriInput.lev[service.code] = {
+                                [selection.level.intLevel]: 100
+                            };
+                        }
                     }
                 }
             }
         }
+
+        console.log(sriInput);
 
         axios.post(`http://localhost:8000/calculate-sri/${currentBuilding.id}/`, sriInput, {
             headers: { Authorization: `Bearer ${token}` }
@@ -205,9 +257,57 @@ const ServicesApplications = () => {
         navigate("/");
       };
     
-      const toggleUserInfo = () => {
+    const toggleUserInfo = () => {
         setShowUserInfo(!showUserInfo);
       };
+
+      const renderSecondaryFunctionality = (service) => {
+        const selection = domainSelections[activeDomain]?.[service.service_desc];
+        if (!selection || !selection.level) return null;
+
+        const secondaryOptions = selection.levels
+            .filter(level => level.intLevel !== selection.level.intLevel)
+            .map(level => ({
+                key: level.intLevel,
+                value: level,
+                text: level.desc
+            }));
+
+        secondaryOptions.unshift({
+            key: 'none',
+            value: null,
+            text: 'No Secondary Functionality'
+        });
+
+        return (
+            <>
+                <Form.Field>
+                    <label>Secondary Functionality</label>
+                    <Dropdown
+                        placeholder='Select Secondary Functionality'
+                        fluid
+                        selection
+                        options={secondaryOptions}
+                        value={selection.secondaryLevel || null}
+                        onChange={(e, { value }) => handleSecondaryLevelChange(service, value)}
+                    />
+                </Form.Field>
+                {selection.secondaryLevel && (
+                    <Form.Field>
+                        <label>Main Functionality Percentage</label>
+                        <Input
+                            type='number'
+                            placeholder='Enter percentage'
+                            min={1}
+                            max={99}
+                            value={selection.percentage}
+                            onChange={(e) => handlePercentageChange(service, e.target.value)}
+                        />
+                    </Form.Field>
+                )}
+            </>
+        );
+    };
     
 
     return (  
@@ -272,7 +372,7 @@ const ServicesApplications = () => {
                         {services.map(service => (
                             <div key={service.code} className="service-container">
                                 <div className="service-header">
-                                    <span className="service-description">{service.service_desc}</span>
+                                    <span className="service-description">{service.code + ': ' + service.service_desc}</span>
                                     <Checkbox
                                         className="service-checkbox"
                                         toggle
@@ -293,6 +393,7 @@ const ServicesApplications = () => {
                                                 />
                                             </Form.Field>
                                         ))}
+                                        {renderSecondaryFunctionality(service)}
                                     </Form>
                                 )}
                             </div>

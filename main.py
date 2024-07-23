@@ -92,7 +92,7 @@ class SRIInput(BaseModel):
     building_type: str
     zone: str
     dom: List[str] #list with the present domains
-    lev: Dict[str, int]  # Dictionary with service code and level as integer
+    lev: Dict[str, Dict[int, int]]  # Dictionary with service.code as key and another dictionary as value
 
 
 # Define a Pydantic model for the SRI output
@@ -175,11 +175,15 @@ def calculate_scores(user_input: SRIInput):
                 # Calculate the score based on the user's input
                 for level in domain_levels:
                     level_input = user_input.lev.get(level.code)  # Get the user input level
-                    if level_input == level.level:  # Match the user input with the level
+                    if level_input:  # Match the user input with the level
                         # Get the score for the corresponding impact criteria
                         score_field = f"score_cr{ic_index + 1}"
-                        score = getattr(level, score_field, 0)
-                        total_score += score
+                        level_scores = []
+                        for user_level, percentage in level_input.items():
+                            if level.level == user_level:
+                                score = getattr(level, score_field, 0) * (percentage / 100)
+                                level_scores.append(score)
+                        total_score += sum(level_scores)
 
                 domain_impact_scores[f"{domain}-{ic}"] = total_score
         

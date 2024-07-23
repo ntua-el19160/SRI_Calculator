@@ -58,7 +58,7 @@ const SRIScore = () => {
     console.log(currentBuilding);
 
     if (!sriData || !currentUser || !currentBuilding) {
-        return <p>Loading...</p>;
+        return <h2>No SRI Score For this Building</h2>;
     }
 
     const { 
