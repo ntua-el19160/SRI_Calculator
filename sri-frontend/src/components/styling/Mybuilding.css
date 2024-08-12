@@ -373,6 +373,13 @@
     margin-right: 150px;
   }
 
+  .service-subtitle {
+    font-size: 16px !important;
+    color: rgb(128, 0, 0);
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 20px;
+  }
+
   .service-menu {
     border: 1px solid black !important;
     border-radius: 15px !important;

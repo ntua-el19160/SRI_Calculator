@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Button, Checkbox, Form, Dropdown, Input } from 'semantic-ui-react';
+import { Menu, Button, Checkbox, Form, Dropdown, Input, Message } from 'semantic-ui-react';
 import { Icon } from "semantic-ui-react";
 
 import './styling/Mybuilding.css'; // Import the CSS file
@@ -33,6 +33,17 @@ const getIconForDomain = (domain) => {
     }
   };
 
+const mandatoryServices = {
+    Heating: ['H-3', 'H-4'],
+    'Domestic hot water': ['DHW-3'],
+    Cooling: ['C-1f', 'C-2a', 'C-3', 'C-4'],
+    Ventilation: ['V-1a', 'V-6'],
+    Lighting: ['L-1a', 'L-2'],
+    'Dynamic building envelope': ['DE-2'],
+    Electricity: ['E-12'],
+    'Monitoring and control': ['MC-3', 'MC-4', 'MC-9', 'MC-13', 'MC-25', 'MC-28', 'MC-29', 'MC-30']
+};
+
 const ServicesApplications = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [currentBuilding, setCurrentBuilding] = useState(null);
@@ -41,6 +52,7 @@ const ServicesApplications = () => {
     const [domainSelections, setDomainSelections] = useState({});
     const [servicesByDomain, setServicesByDomain] = useState({});
     const [showUserInfo, setShowUserInfo] = useState(false); // State to control user info popup
+    const [warningMessage, setWarningMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -202,6 +214,25 @@ const ServicesApplications = () => {
             return;
         }
 
+        let missingMandatoryServices = false;
+
+        for (const domain in domainSelections) {
+            if (mandatoryServices[domain]) {
+                for (const serviceCode of mandatoryServices[domain]) {
+                    const service = servicesByDomain[domain]?.find(s => s.code === serviceCode);
+                    if (service && (!domainSelections[domain][service.service_desc]?.active || !domainSelections[domain][service.service_desc]?.level)) {
+                        missingMandatoryServices = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (missingMandatoryServices) {
+            setWarningMessage("Please select all the mandatory services before proceeding!");
+            return;
+        }
+
         const sriInput = {
             building_type: currentBuilding.building_type,
             zone: currentBuilding.zone,
@@ -346,6 +377,14 @@ const ServicesApplications = () => {
                         </Menu.Item>
                     ))}
                 </Menu>
+                {warningMessage && (
+                        <Message
+                            negative
+                            onDismiss={() => setWarningMessage('')}
+                            header="Action Required"
+                            content={warningMessage}
+                        />
+                )}
             </div>
 
             {/* Right Side */}
@@ -367,12 +406,16 @@ const ServicesApplications = () => {
                     )}
                 </div>
                 <h2 className='service-title'>Services & Applications</h2>
-                <div className="building-content">    
+                <div className="building-content">   
                     <div className="services-form">
                         {services.map(service => (
                             <div key={service.code} className="service-container">
                                 <div className="service-header">
-                                    <span className="service-description">{service.code + ': ' + service.service_desc}</span>
+                                <span className="service-description"
+                                    style={{ color: mandatoryServices[activeDomain]?.includes(service.code) ? 'red' : 'black' }}
+                                >
+                                    {service.code + ': ' + service.service_desc}
+                                </span>
                                     <Checkbox
                                         className="service-checkbox"
                                         toggle
@@ -399,7 +442,8 @@ const ServicesApplications = () => {
                             </div>
                         ))}
                     </div>
-                    <Button className='service-view-sri-button' primary onClick={handleSubmit}>Confirm</Button>
+                    <Button className='service-view-sri-button' primary onClick={handleSubmit}>Calculate</Button>
+                    <p className='service-subtitle'>Services with red color are mandatory</p> 
                 </div>
             </div>
         </div>
