@@ -505,7 +505,7 @@
 .total-sri-score {
     font-size: 30px !important;
     font-weight: bold !important;
-    color: rgb(5, 170, 5) !important;
+    color: rgb(15, 123, 15) !important;
 }
 
 .detailed-scores-title {
@@ -601,4 +601,9 @@
 
 .sri-add-building {
   border-color: purple;
+}
+
+.building-class {
+  margin-top: 15px;
+
 }

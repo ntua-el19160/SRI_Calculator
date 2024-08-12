@@ -168,6 +168,19 @@ const SRIScore = () => {
         }]
     }
 
+    // Function to get building class based on total SRI score
+    const getBuildingClass = (score) => {
+        if (score >= 90) return "A";
+        if (score >= 80) return "B";
+        if (score >= 65) return "C";
+        if (score >= 50) return "D";
+        if (score >= 35) return "E";
+        if (score >= 20) return "F";
+        return "G";
+    };
+
+    const buildingClass = getBuildingClass(total_sri);
+
 
     return (
         <div className="sri-score-page">
@@ -202,7 +215,10 @@ const SRIScore = () => {
                     </Card.Content>
                 </Card>
                 <div className="total-sri-score">
-                    Total SRI Score: {total_sri}%
+                    Total SRI Score: {total_sri}% 
+                    <div className="building-class">
+                        SRI Class: {buildingClass}
+                    </div>
                 </div>
                 <Card className="info-card">
                     <Card.Content>
