@@ -70,8 +70,8 @@ const SRIScore = () => {
     } = sriData;
 
     const impactCriteria = [
-        "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
-        "Information to occupants", "Maintenance and fault prediction"
+        "Energy efficiency", "Energy, flexibility and storage", "Comfort", "Convenience", "Health, wellbeing and accessibility", 
+        "Maintenance and fault prediction", "Information to occupants"
     ];
 
     const domains = [ "Cooling", "Dynamic building envelope", "Domestic hot water", "Electricity", "Electric vehicle charging",

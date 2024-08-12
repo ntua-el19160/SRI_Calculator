@@ -130,8 +130,8 @@ def calculate_scores(user_input: SRIInput):
         domains = user_input.dom
 
         impact_criteria = [
-            "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
-            "Information to occupants", "Maintenance and fault prediction"
+            "Energy efficiency", "Energy, flexibility and storage", "Comfort", "Convenience", "Health, wellbeing and accessibility", 
+            "Maintenance and fault prediction", "Information to occupants"
         ]
 
         # Loop over domains and impact criteria
@@ -147,12 +147,29 @@ def calculate_scores(user_input: SRIInput):
 
             for level in domain_levels:
                 # Determine the maximum level for each service code
-                if level.code not in max_level_for_service or max_level_for_service[level.code] < level.level:
-                    max_level_for_service[level.code] = level.level
+                if level.code in user_input.lev:
+                    if level.code not in max_level_for_service or max_level_for_service[level.code] < level.level:
+                        max_level_for_service[level.code] = level.level
+            
+            #score_fields = [ "score_cr1", "score_cr2", "score_cr3", "score_cr4", "score_cr5", "score_cr6", "score_cr7"]
 
             # Calculate the maximum score for each impact criterion
-            for ic_index, ic in enumerate(impact_criteria):
-                score_field = f"score_cr{ic_index + 1}"
+            for ic in impact_criteria:
+
+                if ic == "Energy efficiency":
+                    score_field = "score_cr1"
+                if ic == "Energy, flexibility and storage":
+                    score_field = "score_cr2"
+                if ic == "Comfort":
+                    score_field = "score_cr3"
+                if ic == "Convenience":
+                    score_field = "score_cr4"
+                if ic == "Health, wellbeing and accessibility":
+                    score_field = "score_cr5"
+                if ic == "Maintenance and fault prediction":
+                    score_field = "score_cr6"
+                if ic == "Information to occupants":
+                    score_field = "score_cr7"
 
                 for service_code, max_level in max_level_for_service.items():
                     # Find the level instance with the maximum level for this service
@@ -169,15 +186,31 @@ def calculate_scores(user_input: SRIInput):
                 domain_max_scores[f"{domain}-{ic}"] = max_scores[ic]
 
             # Now calculate the l(d, ic) score as before
-            for ic_index, ic in enumerate(impact_criteria):
+            for ic in impact_criteria:
                 total_score = 0
 
                 # Calculate the score based on the user's input
                 for level in domain_levels:
                     level_input = user_input.lev.get(level.code)  # Get the user input level
                     if level_input:  # Match the user input with the level
+
+
                         # Get the score for the corresponding impact criteria
-                        score_field = f"score_cr{ic_index + 1}"
+                        if ic == "Energy efficiency":
+                            score_field = "score_cr1"
+                        if ic == "Energy, flexibility and storage":
+                            score_field = "score_cr2"
+                        if ic == "Comfort":
+                            score_field = "score_cr3"
+                        if ic == "Convenience":
+                            score_field = "score_cr4"
+                        if ic == "Health, wellbeing and accessibility":
+                            score_field = "score_cr5"
+                        if ic == "Maintenance and fault prediction":
+                            score_field = "score_cr6"
+                        if ic == "Information to occupants":
+                            score_field = "score_cr7"
+
                         level_scores = []
                         for user_level, percentage in level_input.items():
                             if level.level == user_level:
@@ -211,15 +244,9 @@ def calculate_weighted_sums(user_input: SRIInput, impact_scores: Dict[str, int])
     with get_session() as session:
         
 
-        # Impact criteria
-        #impact_criteria = [
-         #   "Energy efficiency", "Maintenance and fault prediction", "Comfort", "Convenience",
-          #  "Health, wellbeing and accessibility", "Information to occupants", "Energy, flexibility and storage"
-        #]
-
         impact_criteria = [
-            "Comfort", "Convenience", "Energy efficiency", "Energy, flexibility and storage", "Health, wellbeing and accessibility",
-            "Information to occupants", "Maintenance and fault prediction"
+            "Energy efficiency", "Energy, flexibility and storage", "Comfort", "Convenience", "Health, wellbeing and accessibility", 
+            "Maintenance and fault prediction", "Information to occupants"
         ]
 
         # Initialize the weighted sums dictionary
@@ -253,8 +280,22 @@ def calculate_weighted_sums(user_input: SRIInput, impact_scores: Dict[str, int])
                 )
 
             # Get the correct weight for the given impact criterion
-            weight_index = impact_criteria.index(impact_criterion) + 1  # dw_cr1, dw_cr2, etc.
-            weight = getattr(domain_weights, f"dw_cr{weight_index}", 1)
+            if impact_criterion == "Energy efficiency":
+                    weight_field = "dw_cr1"
+            if impact_criterion == "Energy, flexibility and storage":
+                    weight_field = "dw_cr2"
+            if impact_criterion == "Comfort":
+                    weight_field = "dw_cr3"
+            if impact_criterion == "Convenience":
+                    weight_field = "dw_cr4"
+            if impact_criterion == "Health, wellbeing and accessibility":
+                    weight_field = "dw_cr5"
+            if impact_criterion == "Maintenance and fault prediction":
+                    weight_field = "dw_cr6"
+            if impact_criterion == "Information to occupants":
+                    weight_field = "dw_cr7"
+            #weight_index = impact_criteria.index(impact_criterion) + 1  # dw_cr1, dw_cr2, etc.
+            weight = getattr(domain_weights, weight_field, 1)
             weighted_sums[impact_criterion] += weight * score
 
         return weighted_sums
@@ -262,13 +303,13 @@ def calculate_weighted_sums(user_input: SRIInput, impact_scores: Dict[str, int])
 
 # Adding fixed weights for the impact criteria
 impact_weights = {
-    "Energy efficiency": 0.166666667,
-    "Maintenance and fault prediction": 0.166666667,
-    "Comfort": 0.083333333,
-    "Convenience": 0.083333333,
-    "Health, wellbeing and accessibility": 0.083333333,
-    "Information to occupants": 0.083333333,
-    "Energy, flexibility and storage": 0.333333333
+    "Energy efficiency": 0.5,
+    "Energy, flexibility and storage": 1,
+    "Comfort": 0.25,
+    "Convenience": 0.25,
+    "Health, wellbeing and accessibility": 0.25,
+    "Maintenance and fault prediction": 0.5,
+    "Information to occupants": 0.25
 }
 
 # Define the key functionalities and their associated impact criteria
