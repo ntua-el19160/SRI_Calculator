@@ -86,6 +86,10 @@ const SRIScore = () => {
         navigate("/");
     };
 
+    const handleUpgradeClick = () => {
+        navigate(`/upgrade_sri/${buildingId}`);
+    };
+
     // Prepare data for Domain Scores chart
     const domainScoresData = domains.map(domain => ({
         name: domain,
@@ -219,6 +223,13 @@ const SRIScore = () => {
                     <div className="building-class">
                         SRI Class: {buildingClass}
                     </div>
+                    <Button className='service-view-sri-button'
+                    primary 
+                    style={{ marginTop: '20px' }} 
+                    onClick={handleUpgradeClick}
+                >
+                    Upgrade SRI
+                </Button>
                 </div>
                 <Card className="info-card">
                     <Card.Content>

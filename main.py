@@ -15,7 +15,7 @@ import logging
 
 
 # Initialize the FastAPI application
-app = FastAPI()
+app = FastAPI(debug=True)
 
 # Configure CORS
 origins = [
@@ -79,6 +79,7 @@ class BuildingOutput(BaseModel):
     year_built: int
     domains: List[str]  # Add this line
     owner_id: int
+    levels: Dict[str, Dict[int, int]]
 
     class Config:
         orm_mode = True
@@ -655,6 +656,7 @@ def calculate_sri(building_id: int, user_input: SRIInput):
         if building:
             building.sri_scores = sri_result
             building.total_sri = total_sri
+            building.levels = user_input.lev
             session.add(building)
             session.commit()
     
@@ -696,6 +698,159 @@ def get_curr_building(building_id: int, response: Response):
             raise HTTPException(status_code=404, detail="Building not found")
     print(building)
     return building
+
+def calculate_sri_help(building_id: int, user_input: SRIInput):
+
+    try:
+        validate_numeric_data(user_input.lev)  # Validate numeric fields
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    try:
+        # Calculate the domain-impact criteria scores and additional metrics
+        calculated_scores = calculate_scores(user_input)
+        
+        # Ensure returned value is a dictionary
+        if not isinstance(calculated_scores, dict):
+            raise HTTPException(status_code=500, detail="Unexpected return value from calculate_scores()")
+
+        domain_impact_scores = calculated_scores.get("domain_impact_scores", {})
+        domain_max_scores = calculated_scores.get("domain_max_scores", {})
+        smart_readiness_scores = calculated_scores.get("smart_readiness_scores", {})
+
+        # Calculate the weighted sums for each impact criterion
+        weighted_sums = calculate_weighted_sums(user_input, domain_impact_scores)
+        weighted_max_sums = calculate_weighted_sums(user_input, domain_max_scores)
+        
+        sr_impact_criteria = {}  # New dictionary for SR(ic) percentages
+
+        # Calculate SR(ic) as (weighted_sums[ic] / weighted_max_sums[ic]) * 100
+        for ic in weighted_sums:
+            weighted_sum = weighted_sums[ic]
+            weighted_max_sum = weighted_max_sums[ic]
+
+            if weighted_max_sum != 0:
+                sr_percentage = (weighted_sum / weighted_max_sum) * 100
+            else:
+                sr_percentage = 0  # Default to zero if division by zero risk
+
+            sr_impact_criteria[ic] = round(sr_percentage, 2)  # Round to two decimal places
+
+        # Calculate SRf scores for each key functionality
+        srf_scores = calculate_srf_scores(sr_impact_criteria)
+
+        # Calculate the total SRI score
+        total_sri = calculate_total_sri(srf_scores)
+
+        # Calculate the weighted sums for each domain
+        #weighted_domain_sums = calculate_weighted_domain_sums(domain_impact_scores)
+        #weighted_max_domain_sums = calculate_weighted_domain_sums(domain_max_scores)
+        
+        # Calculate SR(d) for each domain
+        #sr_domains = calculate_sr_domains(weighted_domain_sums, weighted_max_domain_sums)
+
+
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
+    # Return all expected results
+    sri_result = {
+        "smart_readiness_scores": smart_readiness_scores,
+        "sr_impact_criteria": sr_impact_criteria,  
+        "srf_scores": srf_scores,
+        "total_sri": total_sri
+    }
+    
+    return sri_result
+
+
+class SRIUpgradeRequest(BaseModel):
+    target_sri: float
+
+def get_next_level(service_code: str, current_level: int, session: Session) -> Optional[int]:
+    next_level = session.query(Levels).filter_by(code=service_code, level=current_level + 1).first()
+    return next_level.level if next_level else None
+
+def apply_level_change(service_code: str, new_level: int, levels: dict) -> dict:
+    new_levels = {k: v.copy() for k, v in levels.items()}
+    if service_code in new_levels:
+        new_levels[service_code] = {new_level: 100}
+    return new_levels
+
+def explore_configurations(session: Session, current_config: dict, target_sri: float, 
+                           all_possible_upgrades: list, building_id: int) -> None:
+    
+    building = session.get(Building, building_id)
+    if not building:
+        raise HTTPException(status_code=404, detail="Building not found")
+    
+    for service_code, levels in current_config.items():
+        current_level = max(levels.keys(), key=int)
+        next_level = get_next_level(service_code, int(current_level), session)
+        
+        if next_level is None:
+            continue  # Skip if there's no higher level
+        
+        # Apply the change
+        new_config = apply_level_change(service_code, next_level, current_config)
+        
+        # Recalculate SRI
+        new_input = SRIInput(building_type=building.building_type,
+                             zone=building.zone, dom=building.domains, lev=new_config)
+        sri_scores = calculate_sri_help(building_id, new_input)
+        total_sri = sri_scores.get("total_sri", 0)
+        
+        if total_sri >= target_sri:
+            all_possible_upgrades.append({
+                "config": new_config,
+                "achieved_sri": total_sri
+            })
+        # Explore further changes
+        elif total_sri < target_sri:
+            explore_configurations(session, new_config, target_sri, all_possible_upgrades, building_id)
+            break
+            
+        
+        
+@app.post("/upgrade_sri/{building_id}/")
+def upgrade_sri(building_id: int, request: SRIUpgradeRequest):
+    with get_session() as session:
+        target_sri = request.target_sri
+        building = session.get(Building, building_id)
+        if not building:
+            raise HTTPException(status_code=404, detail="Building not found")
+
+        current_sri = building.total_sri
+        if target_sri <= current_sri:
+            raise HTTPException(status_code=400, detail="Target SRI must be greater than the current SRI.")
+
+        user_input = {
+            "building_type": building.building_type,
+            "zone": building.zone,
+            "dom": building.domains,
+            "lev": building.levels  # Assuming this is stored with the building
+        }
+
+        all_possible_upgrades = []
+
+        # Start exploration from the current configuration
+        explore_configurations(session, user_input['lev'], target_sri, all_possible_upgrades, building_id)
+
+        if not all_possible_upgrades:
+            return {"message": "No valid upgrades found"}
+
+        # Sort and return the best upgrade (minimal score above target)
+        best_upgrade = min(all_possible_upgrades, key=lambda x: x['achieved_sri'])
+
+        response = {
+            "Upgrades": best_upgrade['config'],
+            "New_Score": best_upgrade['achieved_sri'],
+            "Original_Levels": user_input['lev']  # Include the original levels here
+        }
+
+        return response
+
 
 @app.on_event("startup")
 async def startup_event():

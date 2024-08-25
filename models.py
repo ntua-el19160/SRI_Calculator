@@ -99,6 +99,7 @@ class Building(SQLModel, table=True):
     owner: Optional[person] = Relationship(back_populates="buildings")
     sri_scores: Optional[Dict[str, float]] = Field(sa_column=Column(JSON), default={})  # Add SRI scores field
     total_sri: Optional[float] = 0.0  # Add total SRI score field
+    levels: Optional[Dict[str, Dict[int, int]]] = Field(sa_column=Column(JSON), default={}) #Add user choices field
 
     
 

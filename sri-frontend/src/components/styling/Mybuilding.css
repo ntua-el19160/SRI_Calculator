@@ -614,3 +614,178 @@
   margin-top: 15px;
 
 }
+
+/* UpgradeSRI styles */
+
+.upgrade-sri-score-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.upgrade-main-title {
+  font-size: 32px;
+  color: #006400;
+  margin-bottom: 0;
+}
+
+.upgrade-building-subtitle {
+  font-size: 16px;
+  color: #333;
+}
+
+.upgrade-sri-building-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.upgrade-logout-button {
+  margin-right: 10px;
+}
+
+.upgrade-main-content {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.upgrade-title {
+  font-size: 36px;
+  color: #006400;
+  margin-bottom: 20px;
+}
+
+.upgrade-current-sri {
+  font-size: 24px;
+  color: #228B22;
+  margin-bottom: 30px;
+}
+
+.upgrade-user-info-card {
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+  position: absolute;
+  left: 20px;
+  top: 180px;
+}
+
+.upgrade-input-section {
+  margin: 20px 0;
+  font-size: 20px; /* Larger font size for the label */
+  font-weight: bold; /* Make the label bold */
+  color: #333; /* Slightly darker color for better contrast */
+}
+
+.upgrade-input-section label {
+  margin-right: 10px;
+}
+
+#targetSRI {
+  border-radius: 20px;
+  border: 2px solid #90EE90;
+  padding: 8px;
+  width: 200px;
+  font-size: 18px; /* Ensures the input text size matches the label */
+  margin-top: 10px;
+}
+
+.upgrade-submit-button {
+  background-color: #006400;
+  color: white;
+  padding: 10px 20px;
+  border: 2px solid #006400;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+}
+
+.upgrade-submit-button:hover {
+  background-color: white;
+  color: #006400;
+  border: 2px solid #006400;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.upgrade-back-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #90EE90;
+  color: black;
+  padding: 10px 20px;
+  border: 2px solid #006400;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.upgrade-back-button:hover {
+  background-color: #006400;
+  color: white;
+}
+
+/* Title for the upgrades section */
+.upgrades-title {
+  text-align: center;
+  color: #32CD32; /* Green color */
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.upgrades-title2 {
+  text-align: center;
+  color: #132d13; /* Green color */
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Center the table within the page */
+.upgrades-table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 100px;
+}
+
+/* Styling for the table */
+.upgrades-table-container table {
+  border-collapse: collapse;
+  border: 2px solid #90EE90; /* Light green border */
+  width: 80%; /* Adjust width as needed */
+}
+
+/* Center text inside table cells */
+.upgrades-table-container th,
+.upgrades-table-container td {
+  text-align: center;
+  padding: 10px;
+}
+
+/* Bold text for the table headers */
+.upgrades-table-container th {
+  font-weight: bold;
+  color: #000; /* Black text */
+}
+
+/* Light green border for table cells */
+.upgrades-table-container td,
+.upgrades-table-container th {
+  border: 1px solid #90EE90;
+}
+
+/* Additional spacing */
+.upgrades-section {
+  margin-top: 40px;
+}
+

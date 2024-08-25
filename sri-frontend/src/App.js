@@ -9,6 +9,7 @@ import ServicesApplications from './components/ServicesApplications';
 import Profile from './components/Profile';
 import MyBuildings from './components/MyBuildings';
 import SRIScore from './components/SRIScore';
+import UpgradeSRI from './components/UpgradeSRI';
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/present_domains" element={<PresentDomains />} />
                 <Route path="/services_applications" element={<ServicesApplications />} />
                 <Route path="/sri_score/:buildingId" element={<SRIScore />} />
+                <Route path="/upgrade_sri/:buildingId" element={<UpgradeSRI />} />
             </Routes>
         </Router>
     );
