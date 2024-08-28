@@ -812,7 +812,23 @@ def explore_configurations(session: Session, current_config: dict, target_sri: f
             break
             
         
-        
+def calculate_individual_sri_increase(service_code, original_level, upgraded_levels, original_sri, building, session):
+    """
+    Calculate the individual SRI increase for a specific service upgrade.
+    """
+    # Revert the service to its original level
+    temp_config = upgraded_levels.copy()
+    temp_config[service_code] = {original_level: 100}
+
+    # Recalculate SRI for the configuration with only this service not upgraded
+    new_input = SRIInput(building_type=building.building_type,
+                         zone=building.zone, dom=building.domains, lev=temp_config)
+    sri_scores = calculate_sri_help(building.id, new_input)
+    sri_with_reverted_service = sri_scores.get("total_sri", 0)
+
+    # The contribution is the difference
+    return round(original_sri - sri_with_reverted_service, 2)
+
 @app.post("/upgrade_sri/{building_id}/")
 def upgrade_sri(building_id: int, request: SRIUpgradeRequest):
     with get_session() as session:
@@ -843,10 +859,29 @@ def upgrade_sri(building_id: int, request: SRIUpgradeRequest):
         # Sort and return the best upgrade (minimal score above target)
         best_upgrade = min(all_possible_upgrades, key=lambda x: x['achieved_sri'])
 
+        original_levels = user_input['lev']
+        upgrades = best_upgrade['config']
+        new_sri = best_upgrade['achieved_sri']
+
+        # Calculate the individual increases
+        individual_increases = {}
+        for service_code, original_level in original_levels.items():
+            original_level_key = max(original_level.keys(), key=int)
+            upgraded_level_key = max(upgrades.get(service_code, {}).keys(), key=int)
+
+            if original_level_key != upgraded_level_key:
+                individual_increase = calculate_individual_sri_increase(
+                    service_code, original_level_key, upgrades, new_sri, building, session)
+            else:
+                individual_increase = 0.0
+
+            individual_increases[service_code] = individual_increase
+
         response = {
-            "Upgrades": best_upgrade['config'],
-            "New_Score": best_upgrade['achieved_sri'],
-            "Original_Levels": user_input['lev']  # Include the original levels here
+            "Upgrades": upgrades,
+            "New_Score": new_sri,
+            "Original_Levels": original_levels,  # Include the original levels here
+            "Individual_Increases": individual_increases  # New field for individual contributions
         }
 
         return response

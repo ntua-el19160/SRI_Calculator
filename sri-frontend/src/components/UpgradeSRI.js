@@ -17,6 +17,7 @@ const UpgradeSRI = () => {
     const [newScore, setNewScore] = useState(0);
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false); // New state for loading spinner
+    const [individualIncreases, setIndividualIncreases] = useState({}); // New state for individual increases
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -67,10 +68,11 @@ const UpgradeSRI = () => {
             const response = await axios.post(`http://localhost:8000/upgrade_sri/${buildingId}/`, {
                 target_sri: parseFloat(targetSRI)
             });
-            const { Upgrades, Original_Levels, New_Score } = response.data;
+            const { Upgrades, Original_Levels, New_Score, Individual_Increases } = response.data;
             setUpgrades(Upgrades);
             setOriginalLevels(Original_Levels);
             setNewScore(New_Score);
+            setIndividualIncreases(Individual_Increases); // Set the individual increases
         } catch (error) {
             console.error("Error calculating SRI upgrade:", error);
             setErrorMessage("Failed to upgrade SRI. Please try again.");
@@ -98,6 +100,7 @@ const UpgradeSRI = () => {
                         <th>Service Code</th>
                         <th>Original Levels</th>
                         <th>Upgraded Levels</th>
+                        <th>SRI Increase (%)</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -108,6 +111,7 @@ const UpgradeSRI = () => {
                             <td>
                                 {renderLevel(upgrades[serviceCode])}
                             </td>
+                            <td>{individualIncreases[serviceCode]}%</td> 
                         </tr>
                     ))}
                 </tbody>
