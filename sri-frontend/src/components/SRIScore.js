@@ -58,7 +58,7 @@ const SRIScore = () => {
     console.log(currentBuilding);
 
     if (!sriData || !currentUser || !currentBuilding) {
-        return <h2>No SRI Score For this Building</h2>;
+        return <h2>Loading...</h2>;
     }
 
     const { 
@@ -223,7 +223,7 @@ const SRIScore = () => {
                     <div className="building-class">
                         SRI Class: {buildingClass}
                     </div>
-                    <Button className='service-view-sri-button'
+                    <Button className='upgrade-sri-button'
                     primary 
                     style={{ marginTop: '20px' }} 
                     onClick={handleUpgradeClick}

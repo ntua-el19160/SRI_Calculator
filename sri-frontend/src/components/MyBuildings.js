@@ -106,7 +106,7 @@ const MyBuildings = () => {
                   <Table.HeaderCell>Zone</Table.HeaderCell>
                   <Table.HeaderCell>Country</Table.HeaderCell>
                   <Table.HeaderCell>City</Table.HeaderCell>
-                  <Table.HeaderCell>Year Built</Table.HeaderCell>
+                  <Table.HeaderCell>Building Year</Table.HeaderCell>
                   <Table.HeaderCell>SRI Score</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -118,7 +118,7 @@ const MyBuildings = () => {
                     <Table.Cell>{building.zone}</Table.Cell>
                     <Table.Cell>{building.country}</Table.Cell>
                     <Table.Cell>{building.city}</Table.Cell>
-                    <Table.Cell>{building.year_built}</Table.Cell>
+                    <Table.Cell>{building.year}</Table.Cell>
                     <Table.Cell>
                       <Button className="view-sri-button" onClick={() => handleViewScores(building.id)}>View SRI Scores</Button>
                     </Table.Cell>

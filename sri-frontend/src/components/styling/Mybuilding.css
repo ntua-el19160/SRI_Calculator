@@ -152,6 +152,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-right: 60px;
     width: 100%;
   }
   
@@ -170,11 +171,11 @@
   }
   
   .building-divider {
-    width: 100%;
+    width: 80%;
     height: 20px;
     background: linear-gradient(to right, black, grey);
     margin-bottom: 80px;
-    margin-right: 20px;
+    margin-right: 0px;
   }
   
   .building-buttons {
@@ -256,6 +257,7 @@
     width: 100px !important;
     height: 50px !important;
   }
+
   
   .view-sri-button:hover {
     background-color: white !important;
@@ -317,6 +319,25 @@
     border-color: green !important;
   }
 
+  .building-view-sri-button {
+    background-color: rgb(27, 56, 48) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    cursor: pointer !important;
+    width: 100px !important;
+    height: 50px !important;
+    margin-bottom: 30px !important;
+  }
+
+  
+  .building-view-sri-button:hover {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+  }
+
   /*domain styles */
 
   .domain-view-sri-button {
@@ -328,7 +349,7 @@
     cursor: pointer !important;
     width: 150px !important;
     height: 50px !important;
-    margin-left: 530px !important;
+    margin-left: 450px !important;
   }
   
   .domain-view-sri-button:hover {
@@ -346,6 +367,7 @@
     color: black !important;
     padding: 10px !important;
     border-radius: 10px;
+    margin-right: 60px !important;
   }
   
   .domain-button {
@@ -369,8 +391,8 @@
     position: absolute;
     font-size: 32px;
     color: green;
-    margin-bottom: 700px;
-    margin-right: 150px;
+    margin-bottom: 400px;
+    margin-right: 220px;
   }
 
   .service-subtitle {
@@ -415,6 +437,7 @@
     overflow-y: auto !important;
     position: relative !important;
     margin-top: 100px !important;
+    margin-right: 100px !important;
 }
 
 .service-container {
@@ -460,6 +483,7 @@
     width: 100px !important;
     height: 50px !important;
     margin-top: 20px !important;
+    margin-right: 140px !important;
   }
   
   .service-view-sri-button:hover {
@@ -790,3 +814,21 @@
   margin-top: 40px;
 }
 
+.upgrade-sri-button {
+  background-color: rgb(27, 56, 48) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 10px !important;
+  cursor: pointer !important;
+  width: 100px !important;
+  height: 50px !important;
+  margin-top: 20px !important;
+  /*margin-right: 140px !important;*/
+}
+
+.upgrade-sri-button:hover {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid black !important;
+}

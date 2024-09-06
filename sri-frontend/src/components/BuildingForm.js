@@ -16,9 +16,13 @@ const BuildingForm = () => {
     zone: "",
     country: "",
     city: "",
-    year_built: "",
+    year: "",
   });
   const navigate = useNavigate();
+
+  const [countries, setCountries] = useState([]);
+
+  
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -34,6 +38,18 @@ const BuildingForm = () => {
         console.error("Error fetching user info", error);
       }
     };
+
+    const fetchEuropeanCountries = async () => {
+      try {
+        const response = await axios.get("https://restcountries.com/v3.1/region/europe");
+        const countryNames = response.data.map(country => country.name.common);
+        setCountries(countryNames);
+      } catch (error) {
+        console.error("Error fetching countries", error);
+      }
+    };
+
+    fetchEuropeanCountries();
     fetchUserInfo();
   }, []);
 
@@ -143,17 +159,32 @@ const BuildingForm = () => {
               </Form.Field>
               <Form.Field>
                 <label>Country</label>
-                <input type="text" name="country" value={formData.country} onChange={handleChange} />
+                <select name="country" value={formData.country} onChange={handleChange}>
+                  <option value="">Select Country</option>
+                  {countries.map((country, index) => (
+                    <option key={index} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </select>
               </Form.Field>
               <Form.Field>
                 <label>City</label>
                 <input type="text" name="city" value={formData.city} onChange={handleChange} />
               </Form.Field>
               <Form.Field>
-                <label>Year Built</label>
-                <input type="number" name="year_built" value={formData.year_built} onChange={handleChange} />
+                <label>Building Year</label>
+                <select  name="year" value={formData.year} onChange={handleChange}>
+                <option value="">Select Year</option>
+                  <option value="< 1960">`{'<'}` 1960</option>
+                  <option value="1960 - 1990">1960 - 1990</option>
+                  <option value="1990 - 2010">1990 - 2010</option>
+                  <option value="> 2010">`{'>'}` 2010</option>
+                  <option value="Not yet constructed">Not yet constructed</option>
+                </select>
+
               </Form.Field>
-              <Button className="view-sri-button" type="submit" primary>Confirm</Button>
+              <Button className="building-view-sri-button" type="submit" primary>Confirm</Button>
             </Form>
           </Container>
         </div>

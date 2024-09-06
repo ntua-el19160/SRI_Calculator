@@ -111,7 +111,7 @@ const UpgradeSRI = () => {
                             <td>
                                 {renderLevel(upgrades[serviceCode])}
                             </td>
-                            <td>{individualIncreases[serviceCode]}%</td> 
+                            <td>{individualIncreases[serviceCode] === 0 ? '-' : `${individualIncreases[serviceCode]}%`}</td> 
                         </tr>
                     ))}
                 </tbody>
@@ -121,6 +121,7 @@ const UpgradeSRI = () => {
 
     return (
         <div className="sri-score-page">
+
             <div className="header-section">
                 <div className="logo-title">
                     <img src={require('./assets/logo_sri.png')} alt="SRI Logo" className="logo" />

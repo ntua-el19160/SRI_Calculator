@@ -33,7 +33,7 @@ const getIconForDomain = (domain) => {
     }
   };
 
-const mandatoryServices = {
+/*const mandatoryServices = {
     Heating: ['H-3', 'H-4'],
     'Domestic hot water': ['DHW-3'],
     Cooling: ['C-1f', 'C-2a', 'C-3', 'C-4'],
@@ -42,7 +42,7 @@ const mandatoryServices = {
     'Dynamic building envelope': ['DE-2'],
     Electricity: ['E-12'],
     'Monitoring and control': ['MC-3', 'MC-4', 'MC-9', 'MC-13', 'MC-25', 'MC-28', 'MC-29', 'MC-30']
-};
+};*/
 
 const ServicesApplications = () => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -188,8 +188,8 @@ const ServicesApplications = () => {
 
     const handlePercentageChange = (service, percentage) => {
         // Ensure percentage is not greater than 99
-        if (percentage > 99) {
-            percentage = 99;
+        if (percentage > 100) {
+            percentage = 100;
         }
         setDomainSelections(prev => {
             const currentDomainSelections = prev[activeDomain] || {};
@@ -214,7 +214,7 @@ const ServicesApplications = () => {
             return;
         }
 
-        let missingMandatoryServices = false;
+        /*let missingMandatoryServices = false;
 
         for (const domain in domainSelections) {
             if (mandatoryServices[domain]) {
@@ -231,7 +231,7 @@ const ServicesApplications = () => {
         if (missingMandatoryServices) {
             setWarningMessage("Please select all the mandatory services before proceeding!");
             return;
-        }
+        }*/
 
         const sriInput = {
             building_type: currentBuilding.building_type,
@@ -412,7 +412,7 @@ const ServicesApplications = () => {
                             <div key={service.code} className="service-container">
                                 <div className="service-header">
                                 <span className="service-description"
-                                    style={{ color: mandatoryServices[activeDomain]?.includes(service.code) ? 'red' : 'black' }}
+                                    /*style={{ color: mandatoryServices[activeDomain]?.includes(service.code) ? 'red' : 'black' }}*/
                                 >
                                     {service.code + ': ' + service.service_desc}
                                 </span>
@@ -443,7 +443,7 @@ const ServicesApplications = () => {
                         ))}
                     </div>
                     <Button className='service-view-sri-button' primary onClick={handleSubmit}>Calculate</Button>
-                    <p className='service-subtitle'>Services with red color are mandatory</p> 
+                    {/*<p className='service-subtitle'>Services with red color are mandatory</p>*/} 
                 </div>
             </div>
         </div>

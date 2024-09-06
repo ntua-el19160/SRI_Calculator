@@ -64,8 +64,8 @@ class BuildingInput(BaseModel):
     zone: str
     country: str
     city: str
-    year_built: int
     domains: Optional[List[str]] = []  # Make domains optional and default to empty list
+    year: str
 
     class Config:
         orm_mode = True
@@ -76,10 +76,10 @@ class BuildingOutput(BaseModel):
     zone: str
     country: str
     city: str
-    year_built: int
     domains: List[str]  # Add this line
     owner_id: int
     levels: Dict[str, Dict[int, int]]
+    year: str
 
     class Config:
         orm_mode = True
@@ -420,9 +420,9 @@ def add_building(input_data: BuildingInput, request: Request, response: Response
                 zone=input_data.zone,
                 country=input_data.country,
                 city=input_data.city,
-                year_built=input_data.year_built,
                 #domains=input_data.domains,  # Add domains to the building creation
-                owner_id=current_user.id
+                owner_id=current_user.id,
+                year=input_data.year,
             )
             session.add(building)
             session.commit()
