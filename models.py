@@ -90,9 +90,15 @@ class Building(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     building_name: str
     building_type: str
+    building_usage: str
+    building_state: str
+    energy_class: str
     zone: str
     country: str
     city: str
+    region: str
+    street: str
+    zip: str
     domains: Optional[List[str]] = Field(sa_column=Column(ARRAY(String)))  # Add this line
     owner_id: Optional[int] = Field(default=None, foreign_key="person.id")
     owner: Optional[person] = Relationship(back_populates="buildings")

@@ -103,9 +103,15 @@ const MyBuildings = () => {
                 <Table.Row>
                   <Table.HeaderCell>Building Name</Table.HeaderCell>
                   <Table.HeaderCell>Building Type</Table.HeaderCell>
+                  <Table.HeaderCell>Building Usage</Table.HeaderCell>
+                  <Table.HeaderCell>Building State</Table.HeaderCell>
+                  <Table.HeaderCell>Energy Class</Table.HeaderCell>
                   <Table.HeaderCell>Zone</Table.HeaderCell>
                   <Table.HeaderCell>Country</Table.HeaderCell>
                   <Table.HeaderCell>City</Table.HeaderCell>
+                  <Table.HeaderCell>State/Province/Region</Table.HeaderCell>
+                  <Table.HeaderCell>Street</Table.HeaderCell>
+                  <Table.HeaderCell>Zip Code</Table.HeaderCell>
                   <Table.HeaderCell>Building Year</Table.HeaderCell>
                   <Table.HeaderCell>SRI Score</Table.HeaderCell>
                 </Table.Row>
@@ -115,9 +121,15 @@ const MyBuildings = () => {
                   <Table.Row key={building.id}>
                     <Table.Cell>{building.building_name}</Table.Cell>
                     <Table.Cell>{building.building_type}</Table.Cell>
+                    <Table.Cell>{building.building_usage}</Table.Cell>
+                    <Table.Cell>{building.building_state}</Table.Cell>
+                    <Table.Cell>{building.energy_class}</Table.Cell>
                     <Table.Cell>{building.zone}</Table.Cell>
                     <Table.Cell>{building.country}</Table.Cell>
                     <Table.Cell>{building.city}</Table.Cell>
+                    <Table.Cell>{building.region}</Table.Cell>
+                    <Table.Cell>{building.street}</Table.Cell>
+                    <Table.Cell>{building.zip}</Table.Cell>
                     <Table.Cell>{building.year}</Table.Cell>
                     <Table.Cell>
                       <Button className="view-sri-button" onClick={() => handleViewScores(building.id)}>View SRI Scores</Button>

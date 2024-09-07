@@ -61,9 +61,15 @@ create_db_and_tables()
 class BuildingInput(BaseModel):
     building_name: str
     building_type: str
+    building_usage: str
+    building_state: str
+    energy_class: str
     zone: str
     country: str
     city: str
+    region: str
+    street: str
+    zip: str
     domains: Optional[List[str]] = []  # Make domains optional and default to empty list
     year: str
 
@@ -73,9 +79,15 @@ class BuildingInput(BaseModel):
 class BuildingOutput(BaseModel):
     building_name: str
     building_type: str
+    building_usage: str
+    building_state: str
+    energy_class: str
     zone: str
     country: str
     city: str
+    region: str
+    street: str
+    zip: str
     domains: List[str]  # Add this line
     owner_id: int
     levels: Dict[str, Dict[int, int]]
@@ -423,6 +435,12 @@ def add_building(input_data: BuildingInput, request: Request, response: Response
                 #domains=input_data.domains,  # Add domains to the building creation
                 owner_id=current_user.id,
                 year=input_data.year,
+                building_usage = input_data.building_usage,
+                building_state = input_data.building_state,
+                energy_class = input_data.energy_class,
+                region = input_data.region,
+                street = input_data.street,
+                zip = input_data.zip
             )
             session.add(building)
             session.commit()

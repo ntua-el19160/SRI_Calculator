@@ -13,9 +13,15 @@ const BuildingForm = () => {
   const [formData, setFormData] = useState({
     building_name: "",
     building_type: "",
+    building_usage: "",
+    building_state: "",
+    energy_class: "",
     zone: "",
     country: "",
     city: "",
+    region: "",
+    street: "",
+    zip: "",
     year: "",
   });
   const navigate = useNavigate();
@@ -147,6 +153,41 @@ const BuildingForm = () => {
                 </select>
               </Form.Field>
               <Form.Field>
+                <label>Building Usage</label>
+                <select name="building_usage" value={formData.building_usage} onChange={handleChange}>
+                  <option value="">Select Building Usage</option>
+                  <option value="Residential - Single Family house">Residential - Single family house</option>
+                  <option value="Residential - Small multi family house">Residential - Small multi family house</option>
+                  <option value="Residential - Large multi family house">Residential - Large multi family house</option>
+                  <option value="Residential - Other">Residential - Other</option>
+                  <option value="Non-Residential - Office">Non-Residential - Office</option>
+                  <option value="Non-Residential - Educational">Non-Residential - Educational</option>
+                  <option value="Non-Residential - Healthcare">Non-Residential - Healthcare</option>
+                  <option value="Non-Residential - Other">Non-Residential - Other</option>
+                </select>
+              </Form.Field>
+              <Form.Field>
+                <label>Building State</label>
+                <select name="building_state" value={formData.building_state} onChange={handleChange}>
+                  <option value="">Select Building Type</option>
+                  <option value="Original">Original</option>
+                  <option value="Renovated">Renovated</option>
+                </select>
+              </Form.Field>
+              <Form.Field>
+                <label>Energy Class</label>
+                <select name="energy_class" value={formData.energy_class} onChange={handleChange}>
+                  <option value="">Select Class</option>
+                  <option value="Class A">Class A</option>
+                  <option value="Class B">Class B</option>
+                  <option value="Class C">Class C</option>
+                  <option value="Class D">Class D</option>
+                  <option value="Class E">Class E</option>
+                  <option value="Class F">Class F</option>
+                  <option value="Class G">Class G</option>
+                </select>
+              </Form.Field>
+              <Form.Field>
                 <label>Zone</label>
                 <select name="zone" value={formData.zone} onChange={handleChange}>
                   <option value="">Select Zone</option>
@@ -171,6 +212,18 @@ const BuildingForm = () => {
               <Form.Field>
                 <label>City</label>
                 <input type="text" name="city" value={formData.city} onChange={handleChange} />
+              </Form.Field>
+              <Form.Field>
+                <label>State/Province/Region</label>
+                <input type="text" name="region" value={formData.region} onChange={handleChange} />
+              </Form.Field>
+              <Form.Field>
+                <label>Street and Number</label>
+                <input type="text" name="street" value={formData.street} onChange={handleChange} />
+              </Form.Field>
+              <Form.Field>
+                <label>Zip Code</label>
+                <input type="text" name="zip" value={formData.zip} onChange={handleChange} />
               </Form.Field>
               <Form.Field>
                 <label>Building Year</label>
