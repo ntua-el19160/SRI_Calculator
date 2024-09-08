@@ -142,10 +142,22 @@ def calculate_scores(user_input: SRIInput):
 
         domains = user_input.dom
 
+        # Mandatory services mapping as per domain
+        mandatoryServices = {
+            'Heating': ['H-3', 'H-4'],
+            'Domestic hot water': ['DHW-3'],
+            'Cooling': ['C-1f', 'C-2a', 'C-3', 'C-4'],
+            'Ventilation': ['V-1a', 'V-6'],
+            'Lighting': ['L-1a', 'L-2'],
+            'Dynamic building envelope': ['DE-2'],
+            'Electricity': ['E-12'],
+            'Monitoring and control': ['MC-3', 'MC-4', 'MC-9', 'MC-13', 'MC-25', 'MC-28', 'MC-29', 'MC-30'],
+        }
+
         impact_criteria = [
             "Energy efficiency", "Energy, flexibility and storage", "Comfort", "Convenience", "Health, wellbeing and accessibility", 
             "Maintenance and fault prediction", "Information to occupants"
-        ]
+        ]      
 
         # Loop over domains and impact criteria
         for domain in domains:
@@ -163,6 +175,16 @@ def calculate_scores(user_input: SRIInput):
                 if level.code in user_input.lev:
                     if level.code not in max_level_for_service or max_level_for_service[level.code] < level.level:
                         max_level_for_service[level.code] = level.level
+
+            # Include mandatory services for the current domain
+            mandatory_services = mandatoryServices.get(domain, [])
+
+            for mandatory_service in mandatory_services:
+                # Get all levels for the mandatory service
+                mandatory_service_levels = session.query(Levels).filter(Levels.code == mandatory_service).all()
+                for level in mandatory_service_levels:
+                    if mandatory_service not in max_level_for_service or max_level_for_service[mandatory_service] < level.level:
+                        max_level_for_service[mandatory_service] = level.level
             
             #score_fields = [ "score_cr1", "score_cr2", "score_cr3", "score_cr4", "score_cr5", "score_cr6", "score_cr7"]
 
@@ -658,11 +680,7 @@ def calculate_sri(building_id: int, user_input: SRIInput):
 
     # Return all expected results
     sri_result = {
-        #"domain_impact_scores": domain_impact_scores,
-        #"domain_max_scores": domain_max_scores,
         "smart_readiness_scores": smart_readiness_scores,
-        #"weighted_impact_sums": weighted_sums,
-        #"weighted_max_sums": weighted_max_sums,
         "sr_impact_criteria": sr_impact_criteria,  
         "sr_domains": sr_domains,
         "srf_scores": srf_scores,
@@ -716,6 +734,7 @@ def get_curr_building(building_id: int, response: Response):
             raise HTTPException(status_code=404, detail="Building not found")
     print(building)
     return building
+
 
 def calculate_sri_help(building_id: int, user_input: SRIInput):
 

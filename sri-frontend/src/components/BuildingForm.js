@@ -24,6 +24,7 @@ const BuildingForm = () => {
     zip: "",
     year: "",
   });
+  //const [errors, setErrors] = useState({}); // State to store form errors
   const navigate = useNavigate();
 
   const [countries, setCountries] = useState([]);
@@ -66,8 +67,25 @@ const BuildingForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  /*const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.building_type) newErrors.building_type = "Building type is required.";
+    if (!formData.zone) newErrors.zone = "Zone is required.";
+
+    return newErrors;
+  };
+*/
   const handleSubmit = async (e) => {
+
     e.preventDefault();
+/*
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+*/
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post("http://localhost:8000/add_building/", formData, {
@@ -144,13 +162,14 @@ const BuildingForm = () => {
                   onChange={handleChange}
                 />
               </Form.Field>
-              <Form.Field>
-                <label>Building Type</label>
+              <Form.Field /*error={!!errors.building_type}*/>
+                <label>Building Type*</label>
                 <select name="building_type" value={formData.building_type} onChange={handleChange}>
                   <option value="">Select Building Type</option>
                   <option value="Residential">Residential</option>
                   <option value="Non-Residential">Non-Residential</option>
                 </select>
+                {/*errors.building_type && <div className="error-message">{errors.building_type}</div>*/}
               </Form.Field>
               <Form.Field>
                 <label>Building Usage</label>
@@ -187,8 +206,8 @@ const BuildingForm = () => {
                   <option value="Class G">Class G</option>
                 </select>
               </Form.Field>
-              <Form.Field>
-                <label>Zone</label>
+              <Form.Field /*error={!!errors.zone}*/>
+                <label>Zone*</label>
                 <select name="zone" value={formData.zone} onChange={handleChange}>
                   <option value="">Select Zone</option>
                   <option value="North Europe">North Europe</option>
@@ -197,6 +216,7 @@ const BuildingForm = () => {
                   <option value="South-East Europe">South-East Europe</option>
                   <option value="North-East Europe">North-East Europe</option>
                 </select>
+                {/*errors.zone && <div className="error-message">{errors.zone}</div>*/}
               </Form.Field>
               <Form.Field>
                 <label>Country</label>

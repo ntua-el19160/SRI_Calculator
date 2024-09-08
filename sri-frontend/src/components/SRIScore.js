@@ -149,7 +149,32 @@ const SRIScore = () => {
             enabled: true,   // Enable exporting
             buttons: {
                 contextButton: {
-                    menuItems: ['downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG']
+                    menuItems: [
+                        {
+                            text: 'Download PNG',
+                            onclick: function () {
+                                this.exportChart({ type: 'image/png' });
+                            }
+                        },
+                        {
+                            text: 'Download JPEG',
+                            onclick: function () {
+                                this.exportChart({ type: 'image/jpeg' });
+                            }
+                        },
+                        {
+                            text: 'Download PDF',
+                            onclick: function () {
+                                this.exportChart({ type: 'application/pdf' });
+                            }
+                        },
+                        {
+                            text: 'Download SVG',
+                            onclick: function () {
+                                this.exportChart({ type: 'image/svg+xml' });
+                            }
+                        }
+                    ]
                 }
             },
             filename: 'SRI_Score_DomainChart',
