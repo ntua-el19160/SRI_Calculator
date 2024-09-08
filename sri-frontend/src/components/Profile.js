@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react'; // Import Icon from semantic-ui-react
 
 import './styling/Profile.css'; // Import the CSS file
+import './styling/Mybuilding.css';
 
 const Profile = () => {
     const [user, setUser] = useState(null);
@@ -57,10 +58,17 @@ const Profile = () => {
                     <div className="profile-title-container">
                         <h1 className="main-title">SRI TOOLKIT</h1>
                         <p className="subtitle">Co-creating Tools and Services for Smart Readiness Indicator</p>
-                    </div>
+                    </div>  
                 </div>
-                <div className="vertical-line"></div>
+                {/* Add your text here */}
+                <div className="profile-info-text">
+                    <h3>About the SRI Toolkit</h3>
+                    <p>This app provides tools and services to help evaluate the smart readiness of buildings in accordance with the Smart Readiness Indicator (SRI) framework. Use the toolkit to manage your buildings, evaluate their performance, and improve energy efficiency.</p>
+                    <div className="profile-vertical-line">
+                </div>
+                </div> 
             </div>
+            
     
             {/* Right Side */}
             <div className="profile-right">

@@ -5,10 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+
+import Exporting from 'highcharts/modules/exporting';  // Add this line
+import 'highcharts/modules/export-data';               // Optional: Export data module for exporting data as CSV, XLS, etc.
+
+
 import './styling/Mybuilding.css'; // Import the CSS file
 import './styling/Home.css'; // Import the CSS file
 
-
+// Initialize the Exporting module
+Exporting(Highcharts);  // Add this line
 
 const SRIScore = () => {
     const [sriData, setSriData] = useState(null);
@@ -104,16 +110,17 @@ const SRIScore = () => {
 
     // Domain Scores chart options
     const domainScoresOptions = {
-        chart: { backgroundColor: {
-            linearGradient: [0, 0, 500, 500],
-            stops: [
-                [0, 'rgb(255, 255, 255)'],
-                [1, 'rgb(240, 240, 255)']
-            ]
-        },
-        plotBackgroundColor: 'rgba(255, 255, 255, .9)',
-        plotShadow: true,
-        type: 'column'
+        chart: { 
+            backgroundColor: {
+                linearGradient: [0, 0, 500, 500],
+                stops: [
+                    [0, 'rgb(255, 255, 255)'],
+                    [1, 'rgb(240, 240, 255)']
+                ]
+            },
+            plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+            plotShadow: true,
+            type: 'column'
         },
         title: {
             text: 'Domain Scores'
@@ -134,21 +141,36 @@ const SRIScore = () => {
         series: [{
             name: 'Domain Scores (%)',
             data: domainScoresData
-        }]
+        }],
+        credits: {
+            enabled: false // Disable Highcharts.com link
+        },
+        exporting: {
+            enabled: true,   // Enable exporting
+            buttons: {
+                contextButton: {
+                    menuItems: ['downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG']
+                }
+            },
+            filename: 'SRI_Score_DomainChart',
+            sourceWidth: 800,
+            sourceHeight: 600
+        }
     };
 
     // Impact Criteria Scores chart options
     const impactCriteriaOptions = {
-        chart: { backgroundColor: {
-            linearGradient: [0, 0, 500, 500],
-            stops: [
-                [0, 'rgb(255, 255, 255)'],
-                [1, 'rgb(240, 240, 255)']
-            ]
-        },
-        plotBackgroundColor: 'rgba(255, 255, 255, .9)',
-        plotShadow: true,
-        type: 'column'
+        chart: { 
+            backgroundColor: {
+                linearGradient: [0, 0, 500, 500],
+                stops: [
+                    [0, 'rgb(255, 255, 255)'],
+                    [1, 'rgb(240, 240, 255)']
+                ]
+            },
+            plotBackgroundColor: 'rgba(255, 255, 255, .9)',
+            plotShadow: true,
+            type: 'column'
         },
         title: {
             text: 'Impact Criteria Scores'
@@ -169,9 +191,22 @@ const SRIScore = () => {
         series: [{
             name: 'Impact Scores (%)',
             data: impactCriteriaData
-        }]
-    }
-
+        }],
+        credits: {
+            enabled: false // Disable Highcharts.com link
+        },
+        exporting: {
+            enabled: true,   // Enable exporting
+            buttons: {
+                contextButton: {
+                    menuItems: ['downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG']
+                }
+            },
+            filename: 'SRI_Score_ImpactChart',
+            sourceWidth: 800,
+            sourceHeight: 600
+        }
+    };
     // Function to get building class based on total SRI score
     const getBuildingClass = (score) => {
         if (score >= 90) return "A";
