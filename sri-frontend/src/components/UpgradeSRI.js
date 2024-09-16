@@ -108,10 +108,8 @@ const UpgradeSRI = () => {
                         <tr key={serviceCode}>
                             <td>{serviceCode}</td>
                             <td>{renderLevel(levels)}</td>
-                            <td>
-                                {renderLevel(upgrades[serviceCode])}
-                            </td>
-                            <td>{individualIncreases[serviceCode] === 0 ? '-' : `${individualIncreases[serviceCode]}%`}</td> 
+                            <td>{renderLevel(upgrades[serviceCode])}</td>
+                            <td>{`${individualIncreases[serviceCode]}%`}</td> 
                         </tr>
                     ))}
                 </tbody>

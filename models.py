@@ -99,12 +99,12 @@ class Building(SQLModel, table=True):
     region: str
     street: str
     zip: str
-    domains: Optional[List[str]] = Field(sa_column=Column(ARRAY(String)))  # Add this line
+    domains: Optional[List[str]] = Field(sa_column=Column(ARRAY(String)))  
     owner_id: Optional[int] = Field(default=None, foreign_key="person.id")
     owner: Optional[person] = Relationship(back_populates="buildings")
-    sri_scores: Optional[Dict[str, float]] = Field(sa_column=Column(JSON), default={})  # Add SRI scores field
-    total_sri: Optional[float] = 0.0  # Add total SRI score field
-    levels: Optional[Dict[str, Dict[int, int]]] = Field(sa_column=Column(JSON), default={}) #Add user choices field
+    sri_scores: Optional[Dict[str, float]] = Field(sa_column=Column(JSON), default={})  
+    total_sri: Optional[float] = 0.0  
+    levels: Optional[Dict[str, Dict[int, int]]] = Field(sa_column=Column(JSON), default={}) 
     year: str
     
 

@@ -900,8 +900,11 @@ def upgrade_sri(building_id: int, request: SRIUpgradeRequest):
         upgrades = best_upgrade['config']
         new_sri = best_upgrade['achieved_sri']
 
-        # Calculate the individual increases
+        # Filter services to include only those where the level has changed
         individual_increases = {}
+        filtered_upgrades = {}
+        filtered_original_levels = {}
+
         for service_code, original_level in original_levels.items():
             original_level_key = max(original_level.keys(), key=int)
             upgraded_level_key = max(upgrades.get(service_code, {}).keys(), key=int)
@@ -909,16 +912,17 @@ def upgrade_sri(building_id: int, request: SRIUpgradeRequest):
             if original_level_key != upgraded_level_key:
                 individual_increase = calculate_individual_sri_increase(
                     service_code, original_level_key, upgrades, new_sri, building, session)
-            else:
-                individual_increase = 0.0
 
-            individual_increases[service_code] = individual_increase
+                # Only include services where the level changed
+                filtered_upgrades[service_code] = upgrades[service_code]
+                filtered_original_levels[service_code] = original_level
+                individual_increases[service_code] = individual_increase
 
         response = {
-            "Upgrades": upgrades,
+            "Upgrades": filtered_upgrades,  # Send filtered upgrades
             "New_Score": new_sri,
-            "Original_Levels": original_levels,  # Include the original levels here
-            "Individual_Increases": individual_increases  # New field for individual contributions
+            "Original_Levels": filtered_original_levels,  # Send filtered original levels
+            "Individual_Increases": individual_increases  # Only include increases for changed services
         }
 
         return response
