@@ -65,7 +65,7 @@
 }
 
 .login-button {
-    width: 70%;
+    width: 50%;
     background-color: green !important;
     color: white !important;
     border-radius: 25px !important;
@@ -76,7 +76,7 @@
 }
 
 .signup-button {
-    width: 70%;
+    width: 50%;
     background-color: white !important;
     color: green !important;
     border: 2px solid green !important;
@@ -88,7 +88,7 @@
 
 /* Hover effects */
 .login-button:hover {
-    width: 70%;
+    width: 50%;
     background-color: white !important;
     color: green !important;
     border-radius: 25px !important;
@@ -98,7 +98,7 @@
 }
 
 .signup-button:hover {
-    width: 70%;
+    width: 50%;
     background-color: green !important;
     color: white !important;
     border: 2px solid green !important;

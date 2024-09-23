@@ -299,7 +299,7 @@ const SRIScore = () => {
                         <Card.Meta style={{ color: 'black' }}>Zone: {currentBuilding.zone}</Card.Meta>
                         <Card.Meta style={{ color: 'black' }}>Country: {currentBuilding.country}</Card.Meta>
                         <Card.Meta style={{ color: 'black' }}>City: {currentBuilding.city}</Card.Meta>
-                        <Card.Meta style={{ color: 'black' }}>Year: {currentBuilding.year_built}</Card.Meta>
+                        <Card.Meta style={{ color: 'black' }}>Year: {currentBuilding.year}</Card.Meta>
                     </Card.Content>
                 </Card>
             </div>

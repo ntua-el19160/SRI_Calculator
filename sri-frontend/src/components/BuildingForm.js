@@ -249,10 +249,10 @@ const BuildingForm = () => {
                 <label>Building Year</label>
                 <select  name="year" value={formData.year} onChange={handleChange}>
                 <option value="">Select Year</option>
-                  <option value="< 1960">`{'<'}` 1960</option>
+                  <option value="< 1960">{'<'} 1960</option>
                   <option value="1960 - 1990">1960 - 1990</option>
                   <option value="1990 - 2010">1990 - 2010</option>
-                  <option value="> 2010">`{'>'}` 2010</option>
+                  <option value="> 2010">{'>'} 2010</option>
                   <option value="Not yet constructed">Not yet constructed</option>
                 </select>
 

@@ -61,12 +61,9 @@ const Profile = () => {
                     </div>  
                 </div>
                 {/* Add your text here */}
-                <div className="profile-info-text">
-                    <h3>About the SRI Toolkit</h3>
-                    <p>This app provides tools and services to help evaluate the smart readiness of buildings in accordance with the Smart Readiness Indicator (SRI) framework. Use the toolkit to manage your buildings, evaluate their performance, and improve energy efficiency.</p>
-                    <div className="profile-vertical-line">
+                <div className="vertical-line">
                 </div>
-                </div> 
+                 
             </div>
             
     
@@ -88,6 +85,11 @@ const Profile = () => {
                 </div>
                 <div className="profile-content">
                     <h1 className="profile-welcome-title">Welcome to SRI Toolkit!</h1>
+                    <div className="profile-info-text">
+                    <h3>About the SRI Toolkit</h3>
+                    <p>This app provides tools and services to help evaluate the smart readiness of buildings in accordance with the Smart Readiness Indicator (SRI) framework. Use the toolkit to manage your buildings, evaluate their performance, and improve energy efficiency.</p>
+                    
+                </div> 
                     <div className="profile-divider"></div>
                     <div className="profile-buttons">
                         <div className="profile-button-container">
