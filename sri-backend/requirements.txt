@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlmodel
+typing
+sqlalchemy
+jose
+datetime
+logging
+asyncpg
+pydantic
+pandas
+passlib
+contextlib

@@ -15,7 +15,8 @@ csv_file_path4 = 'Classes_CSV/services.csv'
 
 
 # Define the SQLAlchemy database URL. For SQLite, we'll use a file-based database.
-DATABASE_URL = "postgresql://el19160:pr5td!z386@localhost:5432/sri_db"
+#DATABASE_URL = "postgresql://el19160:pr5td!z386@localhost:5432/sri_db"
+DATABASE_URL = "postgresql://el19160:pr5td!z386@postgres:5432/sri_db"
 
 # Create a SQLAlchemy database engine.
 engine = create_engine(DATABASE_URL, echo=True)
